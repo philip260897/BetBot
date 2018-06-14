@@ -1,14 +1,17 @@
 package com.betbot.bot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
 public class TelegramBot extends TelegramLongPollingBot
 {
-	private TelegramBotEvent telegramEvent;
+	private List<TelegramBotEvent> telegramEvents = new ArrayList<TelegramBotEvent>();
 	
 	public void addTelegramBotEvent(TelegramBotEvent event) {
-		this.telegramEvent = event;
+		this.telegramEvents.add(event);
 	}
 
 	@Override
@@ -17,7 +20,7 @@ public class TelegramBot extends TelegramLongPollingBot
 		if(update.hasMessage() && update.getMessage().hasText())
 		{
 			if(!update.getMessage().getText().startsWith("/")) {
-				if(telegramEvent != null)telegramEvent.MessageReceived(update.getMessage().getText(), update.getMessage().getFrom().getFirstName());
+				eventMessageReceived(update.getMessage().getText(), update.getMessage().getFrom().getFirstName());
 			} else {
 				String[] split = update.getMessage().getText().split(" ");
 				String cmd = split[0].replaceAll("/", "");
@@ -25,7 +28,7 @@ public class TelegramBot extends TelegramLongPollingBot
 				for(int i = 1; i < split.length; i++) {
 					args[i - 1] = split[i];
 				}
-				if(telegramEvent != null)telegramEvent.CommandReceived(cmd, args, update.getMessage().getFrom().getFirstName());
+				eventCommandReceived(cmd, args, update.getMessage().getFrom().getFirstName());
 			}
 		}
 	}
@@ -40,4 +43,15 @@ public class TelegramBot extends TelegramLongPollingBot
 		return "515370867:AAEouxKQB49H9zxfP_L4xQnpJQgVmT7afOI";
 	}
 	
+	private void eventMessageReceived(String message, String sender)
+	{
+		for(TelegramBotEvent event : telegramEvents)
+			event.MessageReceived(message, sender);
+	}
+	
+	private void eventCommandReceived(String cmd, String[] args, String sender)
+	{
+		for(TelegramBotEvent event : telegramEvents)
+			event.CommandReceived(cmd, args, sender);
+	}
 }
