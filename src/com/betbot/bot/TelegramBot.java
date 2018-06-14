@@ -3,12 +3,15 @@ package com.betbot.bot;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 public class TelegramBot extends TelegramLongPollingBot
 {
 	private List<TelegramBotEvent> telegramEvents = new ArrayList<TelegramBotEvent>();
+	//private long CHAT_ID = 0;
 	
 	public void addTelegramBotEvent(TelegramBotEvent event) {
 		this.telegramEvents.add(event);
@@ -17,10 +20,11 @@ public class TelegramBot extends TelegramLongPollingBot
 	@Override
 	public void onUpdateReceived(Update update) 
 	{
+		
 		if(update.hasMessage() && update.getMessage().hasText())
 		{
 			if(!update.getMessage().getText().startsWith("/")) {
-				eventMessageReceived(update.getMessage().getText(), update.getMessage().getFrom().getFirstName());
+				eventMessageReceived(update.getMessage().getText(), update.getMessage().getFrom().getFirstName(), update.getMessage().getChatId());
 			} else {
 				String[] split = update.getMessage().getText().split(" ");
 				String cmd = split[0].replaceAll("/", "");
@@ -28,11 +32,24 @@ public class TelegramBot extends TelegramLongPollingBot
 				for(int i = 1; i < split.length; i++) {
 					args[i - 1] = split[i];
 				}
-				eventCommandReceived(cmd, args, update.getMessage().getFrom().getFirstName());
+				eventCommandReceived(cmd, args, update.getMessage().getFrom().getFirstName(), update.getMessage().getChatId());
 			}
 		}
 	}
 
+	public void sendMessage(String message, long chatId)
+	{
+        SendMessage messager = new SendMessage().setChatId(chatId).setText(message);
+        try 
+        {
+            execute(messager);
+        } 
+        catch (TelegramApiException e) 
+        {
+            e.printStackTrace();
+        }
+	}
+	
 	@Override
 	public String getBotUsername() {
 		return "R6StatTestBot";
@@ -43,15 +60,15 @@ public class TelegramBot extends TelegramLongPollingBot
 		return "515370867:AAEouxKQB49H9zxfP_L4xQnpJQgVmT7afOI";
 	}
 	
-	private void eventMessageReceived(String message, String sender)
+	private void eventMessageReceived(String message, String sender, long chatId)
 	{
 		for(TelegramBotEvent event : telegramEvents)
-			event.MessageReceived(message, sender);
+			event.MessageReceived(message, sender, chatId);
 	}
 	
-	private void eventCommandReceived(String cmd, String[] args, String sender)
+	private void eventCommandReceived(String cmd, String[] args, String sender, long chatId)
 	{
 		for(TelegramBotEvent event : telegramEvents)
-			event.CommandReceived(cmd, args, sender);
+			event.CommandReceived(cmd, args, sender, chatId);
 	}
 }

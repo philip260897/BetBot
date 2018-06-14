@@ -1,6 +1,7 @@
 package com.betbot.wm;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +39,7 @@ public class WMManager
 			for(int i = 0; i < fixtures.length(); i++)
 			{
 				JSONObject matchObj = fixtures.getJSONObject(i);
-				String date = matchObj.getString("date");
+				String date = matchObj.getString("date").replaceAll("T", " ").replaceAll("Z", "");
 				MatchStatus status = MatchStatus.valueOf(matchObj.getString("status"));
 				String teamA = matchObj.getString("homeTeamName");
 				String teamB = matchObj.getString("awayTeamName");
@@ -51,10 +52,10 @@ public class WMManager
 				scoreB = matchObj.getJSONObject("result").getInt("goalsAwayTeam");
 				} catch(Exception ex) {}
 				
-
+				Date ddate = Utils.getDate(date, "yyyy-MM-dd HH:mm:ss");
 				
 				
-				System.out.println(teamA+" "+teamB+" "+status+" "+date+" "+scoreA + " " + scoreB );
+				System.out.println(teamA+" "+teamB+" "+status+" "+date+" "+scoreA + " " + scoreB + " " + ddate.getHours()+":"+ddate.getMinutes()+":"+ddate.getSeconds() );
 			}
 		}
 		catch(Exception ex) {ex.printStackTrace();Logger.LogResult("FAILED");}

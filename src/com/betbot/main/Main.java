@@ -21,7 +21,7 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
-		//wmManager.downloadMatches();
+		wmManager.downloadMatches();
 		ScoreManager.init();		
 		
 		if(botSuccess)
@@ -50,12 +50,12 @@ public class Main
 		bot.addTelegramBotEvent(new TelegramBotEvent() {
 
 			@Override
-			public void MessageReceived(String message, String sender) {
+			public void MessageReceived(String message, String sender, long chatId) {
 				System.out.println("Message received: "+message+" ["+sender+"]");
 			}
 
 			@Override
-			public void CommandReceived(String cmd, String[] args, String sender) {
+			public void CommandReceived(String cmd, String[] args, String sender, long chatId) {
 				
 				String argss = "";
 				for(String s : args) {

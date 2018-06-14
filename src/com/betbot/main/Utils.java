@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Utils 
 {
@@ -23,4 +26,16 @@ public class Utils
 
         return response.toString();
     }
+	
+	public static Date getDate(String timestamp, String format)
+	{
+		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+	    Date parsedDate = null;
+		try {
+			parsedDate = dateFormat.parse(timestamp);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	    return parsedDate;
+	}
 }
