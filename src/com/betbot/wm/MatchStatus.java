@@ -1,5 +1,5 @@
 package com.betbot.wm;
 
 public enum MatchStatus {
-	TBA, TIMED, IN_PLAY, FINISHED;
+	SCHEDULED, TIMED, IN_PLAY, FINISHED;
 }
