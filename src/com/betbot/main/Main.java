@@ -6,6 +6,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import com.betbot.bot.TelegramBot;
 import com.betbot.bot.TelegramBotEvent;
+import com.betbot.score.ScoreManager;
 import com.betbot.wm.WMManager;
 
 public class Main 
@@ -19,6 +20,7 @@ public class Main
 		boolean botSuccess = InitTelegramBot();
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
+		ScoreManager.init();		
 		
 		if(botSuccess)
 		{

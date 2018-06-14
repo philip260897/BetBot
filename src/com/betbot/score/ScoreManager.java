@@ -1,11 +1,12 @@
 package com.betbot.score;
 
+import com.betbot.bot.TelegramBotEvent;
 import com.betbot.main.Main;
 import com.betbot.wm.Match;
 import com.betbot.wm.MatchEvent;
 
 public class ScoreManager {
-	public void init(){
+	public static void init(){
 		Main.getWMManager().addMatchEvent(new MatchEvent(){
 
 			@Override
@@ -22,6 +23,21 @@ public class ScoreManager {
 
 			@Override
 			public void MatchFinished(Match match) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		Main.getTelegramBot().addTelegramBotEvent(new TelegramBotEvent(){
+
+			@Override
+			public void MessageReceived(String message, String sender) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void CommandReceived(String cmd, String[] args, String sender) {
 				// TODO Auto-generated method stub
 				
 			}
