@@ -14,9 +14,15 @@ public class Main
 	public static void main(String[] args) 
 	{
 		Logger.LogForResult("Initializing TelegromBot");
-		boolean success = InitTelegramBot();
-		Logger.LogResult(success ? "OK" : "FAILED");
+		boolean botSuccess = InitTelegramBot();
+		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
+		
+		if(botSuccess)
+		{
+			Logger.Log("Listening in Telegram Group");
+			StartListening();
+		}
 	}
 
 	public static boolean InitTelegramBot()
@@ -26,31 +32,34 @@ public class Main
         try {
         	bot = new TelegramBot();
             telegramBotsApi.registerBot(bot);
-            
-    		bot.setTelegramBotEvent(new TelegramBotEvent() {
-
-    			@Override
-    			public void MessageReceived(String message, String sender) {
-    				System.out.println("Message received: "+message+" ["+sender+"]");
-    			}
-
-    			@Override
-    			public void CommandReceived(String cmd, String[] args, String sender) {
-    				
-    				String argss = "";
-    				for(String s : args) {
-    					argss += s + " ";
-    				}
-    				
-    				System.out.println("Command received: "+cmd+" ["+sender+"] "+ argss);
-    				
-    			}
-    			
-    		});
             return true;
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
         return false;
+	}
+	
+	public static void StartListening()
+	{
+		bot.setTelegramBotEvent(new TelegramBotEvent() {
+
+			@Override
+			public void MessageReceived(String message, String sender) {
+				System.out.println("Message received: "+message+" ["+sender+"]");
+			}
+
+			@Override
+			public void CommandReceived(String cmd, String[] args, String sender) {
+				
+				String argss = "";
+				for(String s : args) {
+					argss += s + " ";
+				}
+				
+				System.out.println("Command received: "+cmd+" ["+sender+"] "+ argss);
+				
+			}
+			
+		});
 	}
 }
