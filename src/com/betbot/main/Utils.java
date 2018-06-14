@@ -38,4 +38,9 @@ public class Utils
 		}
 	    return parsedDate;
 	}
+	
+	public static String getFormated(Date date, String format) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+		return dateFormat.format(date);
+	}
 }

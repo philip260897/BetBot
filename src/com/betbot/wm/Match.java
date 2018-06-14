@@ -2,12 +2,12 @@ package com.betbot.wm;
 
 import java.util.Date;
 
+import com.betbot.main.Utils;
+
 public class Match 
 {
 	private MatchStatus status;
 	private Date time;
-	
-	private String group;
 	
 	private String teamA;
 	private String teamB;
@@ -15,8 +15,7 @@ public class Match
 	private int scoreA;
 	private int scoreB;
 	
-	public Match(String group, String teamA, String teamB, MatchStatus status, int scoreA, int scoreB, Date time) {
-		this.group = group;
+	public Match(String teamA, String teamB, MatchStatus status, int scoreA, int scoreB, Date time) {
 		
 		this.teamA = teamA;
 		this.teamB = teamB;
@@ -27,13 +26,6 @@ public class Match
 		this.status = status;
 		this.time = time;
 	}
-
-	
-	
-	public String getGroup() {
-		return group;
-	}
-
 
 
 	public MatchStatus getStatus() {
@@ -58,5 +50,10 @@ public class Match
 
 	public int getScoreB() {
 		return scoreB;
+	}
+	
+	@Override
+	public String toString() {
+		return "["+teamA+":"+scoreA+" - "+teamB+":"+scoreB+"] "+Utils.getFormated(time, "dd-MM-yy HH:mm:ss") + " "+status;
 	}
 }

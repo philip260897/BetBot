@@ -21,7 +21,7 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
-		wmManager.downloadMatches();
+		wmManager.init();
 		ScoreManager.init();		
 		
 		if(botSuccess)
