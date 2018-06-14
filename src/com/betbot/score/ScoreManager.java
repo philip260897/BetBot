@@ -33,13 +33,16 @@ public class ScoreManager {
 			@Override
 			public void MessageReceived(String message, String sender) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void CommandReceived(String cmd, String[] args, String sender) {
 				// TODO Auto-generated method stub
-				
+				if(cmd.equalsIgnoreCase("register")){
+					Users user = new Users();
+					
+				}
 			}
 			
 		});
