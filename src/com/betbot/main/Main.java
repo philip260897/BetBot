@@ -20,6 +20,7 @@ public class Main
 		boolean botSuccess = InitTelegramBot();
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
+		wmManager = new WMManager();
 		ScoreManager.init();		
 		
 		if(botSuccess)

@@ -1,6 +1,7 @@
 package com.betbot.score;
 
 import com.betbot.bot.TelegramBotEvent;
+import com.betbot.main.Logger;
 import com.betbot.main.Main;
 import com.betbot.wm.Match;
 import com.betbot.wm.MatchEvent;
@@ -24,7 +25,6 @@ public class ScoreManager {
 			@Override
 			public void MatchFinished(Match match) {
 				// TODO Auto-generated method stub
-				
 			}
 			
 		});
@@ -41,8 +41,13 @@ public class ScoreManager {
 				// TODO Auto-generated method stub
 				if(cmd.equalsIgnoreCase("register")){
 					Users user = new Users();
-					
+					user.setUsername(sender);
+					user.setScore(0);
+					user.setTip1(0);
+					user.setTip2(0);
+					Logger.LogResult("Registred");
 				}
+				//if(cmd.equalsIgnoreCase("tip1"));
 			}
 			
 		});
