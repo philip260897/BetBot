@@ -1,4 +1,4 @@
-package score;
+package com.betbot.score;
 
 import com.betbot.main.Main;
 import com.betbot.wm.Match;
