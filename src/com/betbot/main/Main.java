@@ -43,7 +43,7 @@ public class Main
 	
 	public static void StartListening()
 	{
-		bot.setTelegramBotEvent(new TelegramBotEvent() {
+		bot.addTelegramBotEvent(new TelegramBotEvent() {
 
 			@Override
 			public void MessageReceived(String message, String sender) {
@@ -67,5 +67,9 @@ public class Main
 	
 	public static WMManager getWMManager() {
 		return wmManager;
+	}
+	
+	public static TelegramBot getTelegramBot() {
+		return bot;
 	}
 }

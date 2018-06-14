@@ -7,7 +7,7 @@ public class TelegramBot extends TelegramLongPollingBot
 {
 	private TelegramBotEvent telegramEvent;
 	
-	public void setTelegramBotEvent(TelegramBotEvent event) {
+	public void addTelegramBotEvent(TelegramBotEvent event) {
 		this.telegramEvent = event;
 	}
 
