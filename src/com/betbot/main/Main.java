@@ -6,10 +6,12 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import com.betbot.bot.TelegramBot;
 import com.betbot.bot.TelegramBotEvent;
+import com.betbot.wm.WMManager;
 
 public class Main 
 {
 	private static TelegramBot bot;
+	private static WMManager wmManager;
 	
 	public static void main(String[] args) 
 	{
@@ -61,5 +63,9 @@ public class Main
 			}
 			
 		});
+	}
+	
+	public static WMManager getWMManager() {
+		return wmManager;
 	}
 }
