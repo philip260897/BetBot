@@ -36,15 +36,6 @@ public class WMManager
 		for(Match match : matches)
 			System.out.println(match);
 		
-		//Logger.Log("Next Match: "+getNextMatch().toString());
-		
-		//nextMatch = getNextMatch();
-		//currentMatch = getCurrentMatch();
-		
-		//System.out.println("Equals test: "+nextMatch.equals(null));
-		
-		//setReminderTimer();
-		//setMatchStartTimer();
 		update();
 	}
 	

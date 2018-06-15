@@ -21,14 +21,18 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
+		ScoreManager.init();
 		wmManager.init();
-		ScoreManager.init();		
+				
 		
 		if(botSuccess)
 		{
 			Logger.Log("Listening in Telegram Group");
 			StartListening();
+			//bot.sendMessage("Du Hodenknecht");
 		}
+		
+		
 	}
 
 	public static boolean InitTelegramBot()
