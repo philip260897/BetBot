@@ -68,7 +68,7 @@ public class WMManager
 		}
 	}
 	
-	public Match[] downloadMatches()
+	private Match[] downloadMatches()
 	{
 		Logger.LogForResult("Trying to download Match info");
 		try 
@@ -129,8 +129,8 @@ public class WMManager
 
 			JSONObject matchObj = fixtures.getJSONObject(index);
 			String date = matchObj.getString("date").replaceAll("T", " ").replaceAll("Z", "");
-			//MatchStatus status = MatchStatus.valueOf(matchObj.getString("status"));
-			MatchStatus status = MatchStatus.FINISHED;
+			MatchStatus status = MatchStatus.valueOf(matchObj.getString("status"));
+			//MatchStatus status = MatchStatus.FINISHED;
 			String teamA = matchObj.getString("homeTeamName");
 			String teamB = matchObj.getString("awayTeamName");
 
@@ -256,4 +256,7 @@ public class WMManager
 		Logger.Log("UpdateTimer set for Match "+match.toString());
 	}
 
+	public Match[] getMatches() {
+		return matches;
+	}
 }

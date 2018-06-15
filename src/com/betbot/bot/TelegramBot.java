@@ -11,7 +11,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 public class TelegramBot extends TelegramLongPollingBot
 {
 	private List<TelegramBotEvent> telegramEvents = new ArrayList<TelegramBotEvent>();
-	//private long CHAT_ID = 0;
+	private long CHAT_ID = 13451740L;
 	
 	public void addTelegramBotEvent(TelegramBotEvent event) {
 		this.telegramEvents.add(event);
@@ -23,6 +23,7 @@ public class TelegramBot extends TelegramLongPollingBot
 		
 		if(update.hasMessage() && update.getMessage().hasText())
 		{
+			System.out.println(update.getMessage().getChatId());
 			if(!update.getMessage().getText().startsWith("/")) {
 				eventMessageReceived(update.getMessage().getText(), update.getMessage().getFrom().getFirstName(), update.getMessage().getChatId());
 			} else {
@@ -48,6 +49,10 @@ public class TelegramBot extends TelegramLongPollingBot
         {
             e.printStackTrace();
         }
+	}
+	
+	public void sendMessage(String message) {
+		sendMessage(message, CHAT_ID);
 	}
 	
 	@Override
