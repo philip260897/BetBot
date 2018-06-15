@@ -5,6 +5,7 @@ public class Users {
 	private int score;
 	private int tip1;
 	private int tip2;
+	
 	public String getUsername() {
 		return username;
 	}

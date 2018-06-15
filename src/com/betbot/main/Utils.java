@@ -56,4 +56,18 @@ public class Utils
 		d.setYear(cal.get(Calendar.YEAR));
 		return d;
 	}
+	public static int isWinner(int scoreA, int scoreB){
+		if(scoreA>scoreB){
+		return 1;
+		}
+		else if(scoreA<scoreB){
+			return 2;
+		}
+		else if(scoreA==scoreB){
+			return 0;
+		}
+		else{return -1;}
+		
+		
+	}
 }

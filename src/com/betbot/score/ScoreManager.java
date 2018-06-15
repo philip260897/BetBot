@@ -5,9 +5,11 @@ package com.betbot.score;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.betbot.bot.TelegramBot;
 import com.betbot.bot.TelegramBotEvent;
 import com.betbot.main.Logger;
 import com.betbot.main.Main;
+import com.betbot.main.Utils;
 import com.betbot.wm.Match;
 import com.betbot.wm.MatchEvent;
 
@@ -20,18 +22,41 @@ public class ScoreManager {
 			@Override
 			public void PreMatch(Match match) {
 				// TODO Auto-generated method stub
+				Logger.Log("Spiel beginnt in einer Stunde! \nTipps abgeben!\n/1 SCORE für "+match.getTeamA()+"\n/2 SCORE für "+ match.getTeamB());
+				match.toString();
 				
 			}
 
 			@Override
 			public void MatchStarted(Match match) {
-				// TODO Auto-generated method stub
+				
+
 				
 			}
 
 			@Override
 			public void MatchFinished(Match match) {
-				// TODO Auto-generated method stub
+				int winnerScore = 0;
+				winnerScore = Utils.isWinner(match.getScoreA(), match.getScoreB());
+				int winnerTip;
+				int differenceTip;
+				int differenceScore = Math.abs(match.getScoreA()-match.getScoreB());
+				for(Users s : users){
+					winnerTip = Utils.isWinner(s.getTip1(),s.getTip2());
+					differenceTip = Math.abs(s.getTip1()-s.getTip2());
+					//genauer Tipp: 5 Punkte
+					if(s.getTip1()==match.getScoreA()&&s.getTip2()==match.getScoreB()){
+						s.setScore(s.getScore()+5);
+					}else
+						//nur Tendenz: 2 Punkte
+						if(winnerTip==winnerScore){
+						s.setScore(s.getScore()+2);
+					}else //Tendenz und Tordifferenz: 3 Punkte
+						if(winnerTip==winnerScore && differenceTip == differenceScore){
+						s.setScore(s.getScore()+3);
+					}
+					
+				}
 			}
 			
 		});
@@ -57,7 +82,7 @@ public class ScoreManager {
 					users.add(user);
 				}
 				if(cmd.equalsIgnoreCase("getscore")){
-					Logger.LogResult("Registred");
+					//Logger.LogResult("Registred");
 					for(Users s : users) {
 						   if(s.getUsername().contains(sender)) {
 						            Logger.Log(""+s.getScore());
