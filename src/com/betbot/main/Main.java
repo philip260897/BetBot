@@ -59,7 +59,7 @@ public class Main
 			//bot.sendMessage("Du Hodenknecht");
 		}
 		
-		bot.sendMessage("Alles klar bei dir?");
+		//bot.sendMessage("Alles klar bei dir?");
 	}
 
 	public static boolean InitTelegramBot()

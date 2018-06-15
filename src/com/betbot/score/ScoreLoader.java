@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 public class ScoreLoader 
 {
-	public static Users[] loadUsers()
+	public static List<Users> loadUsers()
 	{
 		try {
 			File file = new File("save.json");
@@ -49,7 +49,7 @@ public class ScoreLoader
 					user.setTips(ttips);
 					users.add(user);
 				}
-				return users.toArray(new Users[users.size()]);
+				return users;
 
 			}
 		} catch (Exception e) {
@@ -58,7 +58,7 @@ public class ScoreLoader
 		return null;
 	}
 
-	public static void saveUsers(Users[] users)
+	public static void saveUsers(List<Users> users)
 	{
 		JSONArray rootArray = new JSONArray();
 		for(Users user : users)
@@ -87,6 +87,6 @@ public class ScoreLoader
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(rootArray.toString());
+		//System.out.println(rootArray.toString());
 	}
 }
