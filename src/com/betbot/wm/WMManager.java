@@ -250,4 +250,12 @@ public class WMManager
 	public Match[] getMatches() {
 		return matches;
 	}
+	
+	public Match getCurrenMatch() {
+		return currentMatch == null ? nextMatch : currentMatch;
+	}
+	
+	//public Match getNextMatch() {
+	//	return nextMatch;
+	//}
 }
