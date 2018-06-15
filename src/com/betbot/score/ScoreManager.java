@@ -29,7 +29,7 @@ public class ScoreManager {
 			@Override
 			public void MatchStarted(Match match) {
 				Logger.LogResult("Registred Match Started");
-				Main.getTelegramBot().sendMessage("Spiel beginnt in einer Stunde! \nTipps abgeben!\n/1 SCORE für "+match.getTeamA()+"\n/2 SCORE für "+ match.getTeamB());
+				Main.getTelegramBot().sendMessage("Spiel beginnt in einer Stunde! \nTipps abgeben!\n/bet ID SCORE:SCORE für "+match.getTeamA()+"(ID = "+match.getIndex()+")\n/2 SCORE für "+ match.getTeamB());
 				match.toString();
 				
 			}
@@ -43,11 +43,11 @@ public class ScoreManager {
 				int differenceScore = Math.abs(match.getScoreA()-match.getScoreB());
 				for(Users s : users){
 					
-					winnerTip = Utils.isWinner(s.getTip1(),s.getTip2());
-					differenceTip = Math.abs(s.getTip1()-s.getTip2());
+					winnerTip = Utils.isWinner(s.getTips()[match.getIndex()].getScoreA(),s.getTips()[match.getIndex()].getScoreB());
+					differenceTip = Math.abs(s.getTips()[match.getIndex()].getScoreA()-s.getTips()[match.getIndex()].getScoreB());
 					
 						//genauer Tipp: 5 Punkte
-						if(s.getTip1()==match.getScoreA()&&s.getTip2()==match.getScoreB()){
+						if(s.getTips()[match.getIndex()].getScoreA()==match.getScoreA()&& s.getTips()[match.getIndex()].getScoreB()==match.getScoreB()){
 						s.setScore(s.getScore()+5);
 					}
 					else
@@ -78,7 +78,7 @@ public class ScoreManager {
 				// TODO Auto-generated method stub
 				Match match = Main.getWMManager().getCurrenMatch();
 				
-				if(args.length>1){
+				if(args.length>2){
 					Main.getTelegramBot().sendMessage("Unterstütze nur ZWEI Argumente du "+Utils.insultGenerator());
 				}else{
 				if(cmd.equalsIgnoreCase("register")){
@@ -95,7 +95,7 @@ public class ScoreManager {
 					//Logger.LogResult("Registered");
 					for(Users s : users) {
 						   if(s.getUsername().contains(sender)) {
-						            Logger.Log(""+s.getScore());
+						         Logger.Log(""+s.getScore());
 						   }
 						}
 					
@@ -104,7 +104,8 @@ public class ScoreManager {
 					//Logger.LogResult("Registered");
 					for(Users s : users) {
 						   if(s.getUsername().contains(sender)) {
-							  s.setTip1(Integer.parseInt(args[0]));
+							  s.getTips()[Integer.parseInt(args[0])].setScoreA(Character.getNumericValue(args[1].charAt(0)));
+							  s.getTips()[Integer.parseInt(args[0])].setScoreB(Character.getNumericValue(args[1].charAt(2)));
 						   }
 						}									
 				}
@@ -113,17 +114,17 @@ public class ScoreManager {
 					//Logger.LogResult("Registred");
 					for(Users s : users) {
 						   if(s.getUsername().contains(sender)) {
-							  s.setTip1(Integer.parseInt(args[0]));
+							  //s.setTip1(Integer.parseInt(args[0]));
 						   }
 						}									
 				}
-				if(cmd.equalsIgnoreCase("tips")){
+				if(cmd.equalsIgnoreCase("tipstoday")){
 					//Logger.LogResult("Registred");
 					for(Users s : users) {
 						   if(s.getUsername().contains(sender)) {
 							   Main.getTelegramBot().sendMessage("Deine Tipps du "+Utils.insultGenerator()+":\n"	
 									   								+Main.getWMManager().getCurrenMatch().getTeamA()+
-									   								"-"+Main.getWMManager().getCurrenMatch().getTeamB()+" "+s.getTip1()+":"+s.getTip2());
+									   								"-"+Main.getWMManager().getCurrenMatch().getTeamB()+" "+s.getTips()[match.getIndex()].getScoreA()+":"+s.getTips()[match.getIndex()].getScoreB());
 						   }
 						}									
 				}
