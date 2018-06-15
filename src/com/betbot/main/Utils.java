@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Utils 
@@ -42,5 +43,17 @@ public class Utils
 	public static String getFormated(Date date, String format) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
 		return dateFormat.format(date);
+	}
+	
+	public static Date subtractHour(Date date, int hours) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(date.getYear(), date.getMonth(), date.getDate());
+		cal.add(Calendar.HOUR, hours*-1);
+		Date d = cal.getTime();
+		d.setDate(cal.get(Calendar.DATE));
+		d.setMonth(cal.get(Calendar.MONTH));
+		d.setYear(cal.get(Calendar.YEAR));
+		return d;
 	}
 }

@@ -53,6 +53,17 @@ public class Match
 	}
 	
 	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Match) {
+			Match other = (Match)o;
+			if(this.teamA == other.teamA && this.teamB == other.teamB && this.time.compareTo(other.getTime()) == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
 	public String toString() {
 		return "["+teamA+":"+scoreA+" - "+teamB+":"+scoreB+"] "+Utils.getFormated(time, "dd-MM-yy HH:mm:ss") + " "+status;
 	}

@@ -3,6 +3,8 @@ package com.betbot.wm;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,12 +12,15 @@ import org.json.JSONObject;
 import com.betbot.main.Logger;
 import com.betbot.main.Utils;
 
-public class WMManager implements Runnable
+public class WMManager extends TimerTask
 {
 	private static String MATCH_URL = "http://api.football-data.org/v1/competitions/467/fixtures";
 	private List<MatchEvent> matchEvents = new ArrayList<MatchEvent>();
 	
 	private Match[] matches;
+	
+	private Match nextMatch;
+	private Match currentMatch;
 	
 	public WMManager() {
 		
@@ -32,6 +37,13 @@ public class WMManager implements Runnable
 			System.out.println(match);
 		
 		Logger.Log("Next Match: "+getNextMatch().toString());
+		nextMatch = getNextMatch();
+		currentMatch = getCurrentMatch();
+		
+		System.out.println("Equals test: "+nextMatch.equals(nextMatch));
+		
+		setReminderTimer();
+		setMatchStartTimer();
 	}
 	
 	public Match[] downloadMatches()
@@ -64,6 +76,9 @@ public class WMManager implements Runnable
 				} catch(Exception ex) {}
 				
 				Date ddate = Utils.getDate(date, "yyyy-MM-dd HH:mm:ss");
+				ddate = Utils.subtractHour(ddate, -2);
+				//ddate.setHours(11);
+				//ddate.setMinutes(20);
 				
 				Match match = new Match(teamA, teamB, status, scoreA, scoreB, ddate);
 				matches.add(match);
@@ -114,6 +129,36 @@ public class WMManager implements Runnable
 			event.MatchFinished(match);
 	}
 
+	private void setReminderTimer() {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				if(nextMatch != null) {
+					Logger.Log("Prematch Triggered! "+nextMatch.toString());
+					eventPreMatch(nextMatch);
+				}else {Logger.Log("Reminder Timer failed! No next match!");}
+			}
+			
+		}, Utils.subtractHour(nextMatch.getTime(), 1));
+	}
+	
+	private void setMatchStartTimer() {
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				//currentMatch = nextMatch;
+				if(nextMatch != null) {
+					currentMatch = nextMatch;
+					eventMatchStarted(currentMatch);
+				}else {Logger.Log("Match Start Timer failed! No next match!");}
+			}
+			
+		}, nextMatch.getTime());
+	}
 	
 	@Override
 	public void run() {
