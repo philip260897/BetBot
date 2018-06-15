@@ -103,8 +103,8 @@ public class WMManager
 				
 				Date ddate = Utils.getDate(date, "yyyy-MM-dd HH:mm:ss");
 				ddate = Utils.subtractHour(ddate, -2);
-				ddate.setHours(11);
-				ddate.setMinutes(15);
+				//ddate.setHours(11);
+				//ddate.setMinutes(25);
 				
 				Match match = new Match(teamA, teamB, status, scoreA, scoreB, ddate, i);
 				matches.add(match);
@@ -117,19 +117,20 @@ public class WMManager
 	}
 	
 	private Match getMatchUpdate(int index) {
-		Logger.LogForResult("Trying to download Match info");
+		//Logger.LogForResult("Trying to download Match info");
 		try 
 		{
 			String json_raw = Utils.getText(MATCH_URL);
-			Logger.LogResult("OK");
+			//Logger.LogResult("OK");
 
-			Logger.LogForResult("Trying to parse JSON");
+			//Logger.LogForResult("Trying to parse JSON");
 			JSONObject obj = new JSONObject(json_raw);
 			JSONArray fixtures = obj.getJSONArray("fixtures");
 
 			JSONObject matchObj = fixtures.getJSONObject(index);
 			String date = matchObj.getString("date").replaceAll("T", " ").replaceAll("Z", "");
-			MatchStatus status = MatchStatus.valueOf(matchObj.getString("status"));
+			//MatchStatus status = MatchStatus.valueOf(matchObj.getString("status"));
+			MatchStatus status = MatchStatus.FINISHED;
 			String teamA = matchObj.getString("homeTeamName");
 			String teamB = matchObj.getString("awayTeamName");
 
@@ -147,7 +148,7 @@ public class WMManager
 			Match match = new Match(teamA, teamB, status, scoreA, scoreB, ddate, index);
 
 
-			Logger.LogResult("OK");
+			//Logger.LogResult("OK");
 			return match;
 		}
 		catch(Exception ex) {ex.printStackTrace();Logger.LogResult("FAILED");}
@@ -235,16 +236,19 @@ public class WMManager
 			public void run() {
 				if(match != null) {
 					Logger.Log("Updating match stats");
-					currentMatch = getMatchUpdate(match.getIndex());//detect score changes?
+					Match m = getMatchUpdate(match.getIndex());
+					if(m != null) {
 					
-					if(currentMatch.getStatus() == MatchStatus.FINISHED) {
-						eventMatchFinished(currentMatch);
-						currentMatch = null;
-						nextMatch = null;
-						update();
-						timer.cancel();
+						currentMatch = getMatchUpdate(match.getIndex());//detect score changes?
+						
+						if(currentMatch.getStatus() == MatchStatus.FINISHED) {
+							eventMatchFinished(currentMatch);
+							currentMatch = null;
+							nextMatch = null;
+							update();
+							timer.cancel();
+						}
 					}
-					
 				}else {Logger.Log("UpdateTimer failed! No next match!");}
 			}
 			
