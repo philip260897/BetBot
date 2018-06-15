@@ -22,15 +22,15 @@ public class ScoreManager {
 			@Override
 			public void PreMatch(Match match) {
 				// TODO Auto-generated method stub
-				Logger.Log("Spiel beginnt in einer Stunde! \nTipps abgeben!\n/1 SCORE für "+match.getTeamA()+"\n/2 SCORE für "+ match.getTeamB());
-				match.toString();
+				Logger.LogResult("Registred prematch");
 				
 			}
 
 			@Override
 			public void MatchStarted(Match match) {
-				
-
+				Logger.LogResult("Registred Match Started");
+				Main.getTelegramBot().sendMessage("Spiel beginnt in einer Stunde! \nTipps abgeben!\n/1 SCORE für "+match.getTeamA()+"\n/2 SCORE für "+ match.getTeamB());
+				match.toString();
 				
 			}
 
@@ -42,16 +42,21 @@ public class ScoreManager {
 				int differenceTip;
 				int differenceScore = Math.abs(match.getScoreA()-match.getScoreB());
 				for(Users s : users){
+					
 					winnerTip = Utils.isWinner(s.getTip1(),s.getTip2());
 					differenceTip = Math.abs(s.getTip1()-s.getTip2());
-					//genauer Tipp: 5 Punkte
-					if(s.getTip1()==match.getScoreA()&&s.getTip2()==match.getScoreB()){
+					
+						//genauer Tipp: 5 Punkte
+						if(s.getTip1()==match.getScoreA()&&s.getTip2()==match.getScoreB()){
 						s.setScore(s.getScore()+5);
-					}else
+					}
+					else
 						//nur Tendenz: 2 Punkte
 						if(winnerTip==winnerScore){
 						s.setScore(s.getScore()+2);
-					}else //Tendenz und Tordifferenz: 3 Punkte
+					}
+					else 
+						//Tendenz und Tordifferenz: 3 Punkte
 						if(winnerTip==winnerScore && differenceTip == differenceScore){
 						s.setScore(s.getScore()+3);
 					}
@@ -71,11 +76,13 @@ public class ScoreManager {
 			@Override
 			public void CommandReceived(String cmd, String[] args, String sender, long chatId) {
 				// TODO Auto-generated method stub
-				
+				if(args.length>1){
+					Main.getTelegramBot().sendMessage("Unterstütze nur EIN Argument du dummer Hurensohn");
+				}
 				if(cmd.equalsIgnoreCase("register")){
 					Users user = new Users();
 					user.setUsername(sender);
-					user.setScore(i++);
+					user.setScore(0);
 					user.setTip1(0);
 					user.setTip2(0);
 					Logger.LogResult("Registred");
@@ -89,6 +96,23 @@ public class ScoreManager {
 						   }
 						}
 					
+				}
+				if(cmd.equalsIgnoreCase("1")){
+					//Logger.LogResult("Registred");
+					for(Users s : users) {
+						   if(s.getUsername().contains(sender)) {
+							  s.setTip1(Integer.parseInt(args[0]));
+						   }
+						}									
+				}
+				
+				if(cmd.equalsIgnoreCase("2")){
+					//Logger.LogResult("Registred");
+					for(Users s : users) {
+						   if(s.getUsername().contains(sender)) {
+							  s.setTip1(Integer.parseInt(args[0]));
+						   }
+						}									
 				}
 				
 				

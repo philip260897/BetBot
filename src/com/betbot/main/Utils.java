@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 public class Utils 
 {
@@ -69,5 +70,12 @@ public class Utils
 		else{return -1;}
 		
 		
+	}
+	public static String insultGenerator(){
+
+		Random rand = new Random();
+		String insults[] = {"Schwingtitte","Analbanane","Analdin", "Hodenknecht", "Wixgsicht", "Otto", "Gsicht", "Hurenknecht", "Wixkopf", "Hobelschlunze", "Schlingel", "Nichtsnutz"};
+		int  n = rand.nextInt(insults.length);
+		return insults[n];
 	}
 }
