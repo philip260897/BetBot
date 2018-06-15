@@ -3,8 +3,13 @@ package com.betbot.score;
 public class Users {
 	private String username;
 	private int score;
-	private int tip1;
-	private int tip2;
+	private Tip[] tips = new Tip[64];
+	
+	public Users(){
+		for(int i = 0; i<tips.length; i++){
+			tips[i] = new Tip();
+		}
+	}
 	
 	public String getUsername() {
 		return username;
@@ -18,16 +23,10 @@ public class Users {
 	public void setScore(int score) {
 		this.score = score;
 	}
-	public int getTip1() {
-		return tip1;
+	public Tip[] getTips() {
+		return tips;
 	}
-	public void setTip1(int tip) {
-		this.tip1 = tip;
-	}
-	public int getTip2() {
-		return tip2;
-	}
-	public void setTip2(int tip2) {
-		this.tip2 = tip2;
+	public void setTips(Tip[] tips) {
+		this.tips = tips;
 	}
 }

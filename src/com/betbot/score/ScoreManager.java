@@ -76,20 +76,23 @@ public class ScoreManager {
 			@Override
 			public void CommandReceived(String cmd, String[] args, String sender, long chatId) {
 				// TODO Auto-generated method stub
+				Match match = Main.getWMManager().getCurrenMatch();
+				
 				if(args.length>1){
-					Main.getTelegramBot().sendMessage("Unterstütze nur EIN Argument du dummer Hurensohn");
-				}
+					Main.getTelegramBot().sendMessage("Unterstütze nur ZWEI Argumente du "+Utils.insultGenerator());
+				}else{
 				if(cmd.equalsIgnoreCase("register")){
 					Users user = new Users();
 					user.setUsername(sender);
 					user.setScore(0);
-					user.setTip1(0);
-					user.setTip2(0);
+					user.setScore(0);
+					//user.setTip2(0);
+					//user.getTips()[match.getIndex()].setScoreA(scoreA);
 					Logger.LogResult("Registred");
 					users.add(user);
 				}
 				if(cmd.equalsIgnoreCase("getscore")){
-					//Logger.LogResult("Registred");
+					//Logger.LogResult("Registered");
 					for(Users s : users) {
 						   if(s.getUsername().contains(sender)) {
 						            Logger.Log(""+s.getScore());
@@ -97,8 +100,8 @@ public class ScoreManager {
 						}
 					
 				}
-				if(cmd.equalsIgnoreCase("1")){
-					//Logger.LogResult("Registred");
+				if(cmd.equalsIgnoreCase("bet")){
+					//Logger.LogResult("Registered");
 					for(Users s : users) {
 						   if(s.getUsername().contains(sender)) {
 							  s.setTip1(Integer.parseInt(args[0]));
@@ -113,6 +116,17 @@ public class ScoreManager {
 							  s.setTip1(Integer.parseInt(args[0]));
 						   }
 						}									
+				}
+				if(cmd.equalsIgnoreCase("tips")){
+					//Logger.LogResult("Registred");
+					for(Users s : users) {
+						   if(s.getUsername().contains(sender)) {
+							   Main.getTelegramBot().sendMessage("Deine Tipps du "+Utils.insultGenerator()+":\n"	
+									   								+Main.getWMManager().getCurrenMatch().getTeamA()+
+									   								"-"+Main.getWMManager().getCurrenMatch().getTeamB()+" "+s.getTip1()+":"+s.getTip2());
+						   }
+						}									
+				}
 				}
 				
 				
