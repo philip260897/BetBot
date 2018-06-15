@@ -15,7 +15,9 @@ public class Match
 	private int scoreA;
 	private int scoreB;
 	
-	public Match(String teamA, String teamB, MatchStatus status, int scoreA, int scoreB, Date time) {
+	private int index;
+	
+	public Match(String teamA, String teamB, MatchStatus status, int scoreA, int scoreB, Date time, int index) {
 		
 		this.teamA = teamA;
 		this.teamB = teamB;
@@ -25,6 +27,7 @@ public class Match
 		
 		this.status = status;
 		this.time = time;
+		this.index = index;
 	}
 
 
@@ -50,6 +53,10 @@ public class Match
 
 	public int getScoreB() {
 		return scoreB;
+	}
+	
+	public int getIndex() {
+		return index;
 	}
 	
 	@Override
