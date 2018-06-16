@@ -299,7 +299,5 @@ public class WMManager
 	public int getFutureMatchCount() {
 		return matches.length - getPastMatchCount();
 	}
-	//public Match getNextMatch() {
-	//	return nextMatch;
-	//}
+	
 }
