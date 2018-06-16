@@ -28,7 +28,7 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
-		//ScoreManager.init();
+		ScoreManager.init();
 		wmManager.init();
 		
 		testUsers();
@@ -56,7 +56,7 @@ public class Main
 				if(tip.isValid()) {
 					int s =  Utils.calculateScore(match, user.getTips()[i]);
 					
-					System.out.println("\t"+match.getTeamA()+":"+match.getTeamB() + " " + match.getScoreA()+"-"+match.getScoreB() + " Tip: "+tip.getScoreA()+":"+tip.getScoreB() + " score: "+s);
+					//System.out.println("\t"+match.getTeamA()+":"+match.getTeamB() + " " + match.getScoreA()+"-"+match.getScoreB() + " Tip: "+tip.getScoreA()+":"+tip.getScoreB() + " score: "+s);
 					
 					score+=s;
 				}
