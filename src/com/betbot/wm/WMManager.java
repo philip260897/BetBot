@@ -286,18 +286,18 @@ public class WMManager
 		return currentMatch == null ? nextMatch : currentMatch;
 	}
 	
-	public int getPastMatchCount() {
-		Date date = new Date();
+	public int getFinishedMatchCount() {
+		int count = 0;
 		for(int i = 0; i < matches.length; i++) {
-			if(matches[i].getTime().after(date)) {
-				return i;
+			if(matches[i].getStatus() == MatchStatus.FINISHED) {
+				count++;
 			}
 		}
-		return -1;
+		return count;
 	}
 	
-	public int getFutureMatchCount() {
-		return matches.length - getPastMatchCount();
+	public int getUnfinishedMatchCount() {
+		return matches.length - getFinishedMatchCount();
 	}
 	
 }

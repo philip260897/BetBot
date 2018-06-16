@@ -5,15 +5,23 @@ public class Users {
 	private int score;
 	private Tip[] tips = new Tip[64];
 	
-	public Users(){
+	@Deprecated
+	public Users() {
+		this("");
+	}
+	
+	public Users(String username){
 		for(int i = 0; i<tips.length; i++){
 			tips[i] = new Tip();
 		}
+		this.username = username;
+		this.score = 0;
 	}
 	
 	public String getUsername() {
 		return username;
 	}
+	@Deprecated
 	public void setUsername(String username) {
 		this.username = username;
 	}
