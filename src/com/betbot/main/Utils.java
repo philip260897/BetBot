@@ -10,6 +10,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
+import com.betbot.score.Tip;
+import com.betbot.score.Users;
+import com.betbot.wm.Match;
+
 public class Utils 
 {
 	public static String getText(String url) throws Exception 
@@ -77,5 +81,30 @@ public class Utils
 		String insults[] = {"ABS-Bremser","dumme Fickhure","Schwingtitte","Analbanane","Analdin", "Hodenknecht", "Wixgsicht", "Otto", "Gsicht", "Hurenknecht", "Wixkopf", "Hobelschlunze", "Schlingel", "Nichtsnutz"};
 		int  n = rand.nextInt(insults.length);
 		return insults[n];
+	}
+	
+	public static int calculateScore(Match match, Tip tip) 
+	{
+		int winnerScore = Utils.isWinner(match.getScoreA(), match.getScoreB());
+		int differenceScore = Math.abs(match.getScoreA()-match.getScoreB());
+		
+		int winnerTip = Utils.isWinner(tip.getScoreA(), tip.getScoreB());
+		int differenceTip = Math.abs(tip.getScoreA()-tip.getScoreB());
+
+		//genauer Tipp: 5 Punkte
+		if(tip.getScoreA()==match.getScoreA()&& tip.getScoreB()==match.getScoreB()){
+			return 5;
+		}
+		else
+			//nur Tendenz: 2 Punkte
+			if(winnerTip==winnerScore){
+				return 2;
+			}
+			else 
+				//Tendenz und Tordifferenz: 3 Punkte
+				if(winnerTip==winnerScore && differenceTip == differenceScore){
+					return 3;
+				}
+		return 0;
 	}
 }

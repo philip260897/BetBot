@@ -24,7 +24,7 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
-		ScoreManager.init();
+		//ScoreManager.init();
 		wmManager.init();
 		
 		/*Users[] users = new Users[2];

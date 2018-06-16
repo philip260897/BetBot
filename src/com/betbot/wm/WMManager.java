@@ -19,8 +19,8 @@ public class WMManager
 	
 	private Match[] matches;
 	
-	private Match nextMatch;
-	private Match currentMatch;
+	private Match[] nextMatch;
+	private Match[] currentMatch;
 	
 	public WMManager() {
 		
@@ -36,12 +36,18 @@ public class WMManager
 		for(Match match : matches)
 			System.out.println(match);
 		
+		Match[] nexts = updateNextMatches();
+		System.out.println("Nexts: ");
+		for(Match m : nexts) {
+			System.out.println(m);
+		}
+		
 		update();
 	}
 	
 	private void update()
 	{
-		Match current = getCurrentMatch();
+		Match[] current = updateCurrentMatches();
 		if(currentMatch == null && current != null) {
 			setReminderTimer(current);
 			setMatchStartTimer(current);
@@ -49,7 +55,7 @@ public class WMManager
 		}
 		else
 		{
-			Match next = getNextMatch();
+			Match[] next = updateNextMatches();
 			if(!next.equals(nextMatch)) {
 				setReminderTimer(next);
 				setMatchStartTimer(next);
@@ -72,6 +78,7 @@ public class WMManager
 			Logger.LogForResult("Trying to parse JSON");
 			JSONObject obj = new JSONObject(json_raw);
 			JSONArray fixtures = obj.getJSONArray("fixtures");
+			Date fix = new Date();
 			for(int i = 0; i < fixtures.length(); i++)
 			{
 				JSONObject matchObj = fixtures.getJSONObject(i);
@@ -94,6 +101,13 @@ public class WMManager
 				
 				Date ddate = Utils.getDate(date, "yyyy-MM-dd HH:mm:ss");
 				ddate = Utils.subtractHour(ddate, -2);
+				
+				/*if(i == 4 || i == 5) {
+					//ddate = fix;
+					status = MatchStatus.IN_PLAY;
+					ddate.setHours(12);
+				}*/
+				
 				//ddate.setHours(11);
 				//ddate.setMinutes(25);
 				
@@ -103,50 +117,36 @@ public class WMManager
 			Logger.LogResult("OK");
 			return matches.toArray(new Match[matches.size()]);
 		}
-		catch(Exception ex) {ex.printStackTrace();Logger.LogResult("FAILED");}
+		catch(Exception ex) {Logger.LogResult("FAILED");ex.printStackTrace();}
 		return null;
 	}
 	
-	private Match getMatchUpdate(int index) {
-		//Logger.LogForResult("Trying to download Match info");
-		try 
-		{
-			String json_raw = Utils.getText(MATCH_URL);
-			//Logger.LogResult("OK");
-
-			//Logger.LogForResult("Trying to parse JSON");
-			JSONObject obj = new JSONObject(json_raw);
-			JSONArray fixtures = obj.getJSONArray("fixtures");
-
-			JSONObject matchObj = fixtures.getJSONObject(index);
-			String date = matchObj.getString("date").replaceAll("T", " ").replaceAll("Z", "");
-			MatchStatus status = MatchStatus.valueOf(matchObj.getString("status"));
-			//MatchStatus status = MatchStatus.FINISHED;
-			String teamA = matchObj.getString("homeTeamName");
-			String teamB = matchObj.getString("awayTeamName");
-
-			int scoreA = 0;
-			int scoreB = 0;
-
-			try {
-				scoreA = matchObj.getJSONObject("result").getInt("goalsHomeTeam");
-				scoreB = matchObj.getJSONObject("result").getInt("goalsAwayTeam");
-			} catch(Exception ex) {}
-
-			Date ddate = Utils.getDate(date, "yyyy-MM-dd HH:mm:ss");
-			ddate = Utils.subtractHour(ddate, -2);
-
-			Match match = new Match(teamA, teamB, status, scoreA, scoreB, ddate, index);
-
-
-			//Logger.LogResult("OK");
-			return match;
+	private Match[] getMatchUpdates(Match[] matches) {
+		Match[] update = downloadMatches();
+		if(update != null) {
+			Match[] updated = new Match[matches.length];
+			for(int i = 0; i < matches.length; i++) {
+				updated[i] = update[matches[i].getIndex()];
+			}
+			return updated;
 		}
-		catch(Exception ex) {ex.printStackTrace();Logger.LogResult("FAILED");}
 		return null;
 	}
 	
-	private Match getNextMatch() 
+	private Match[] updateNextMatches() {
+		List<Match> matches = new ArrayList<Match>();
+		Match next = updateNextMatch();
+		
+		for(int i = 0; i < this.matches.length; i++) {
+			if(this.matches[i].getTime().compareTo(next.getTime()) == 0) {
+				matches.add(this.matches[i]);
+			}
+		}
+		
+		return matches.toArray(new Match[matches.size()]);
+	}
+	
+	private Match updateNextMatch() 
 	{
 		if(matches != null) {
 			for(int i = 0; i < matches.length; i++) {
@@ -158,7 +158,21 @@ public class WMManager
 		return null;
 	}
 	
-	private Match getCurrentMatch()
+	private Match[] updateCurrentMatches()
+	{
+		List<Match> m = new ArrayList<Match>();
+		if(matches != null) {
+			for(int i = 0; i < matches.length; i++) {
+				Match match = matches[i];
+				if(match.getStatus() == MatchStatus.IN_PLAY)
+					m.add(match);
+			}
+			return m.toArray(new Match[m.size()]);
+		}
+		return null;
+	}
+	
+	/*private Match getCurrentMatch()
 	{
 		if(matches != null) {
 			for(int i = 0; i < matches.length; i++) {
@@ -168,40 +182,43 @@ public class WMManager
 			}
 		}
 		return null;
-	}
+	}*/
 	
-	private void eventPreMatch(Match match) {
+	private void eventPreMatch(Match[] match) {
 		for(MatchEvent event : matchEvents)
 			event.PreMatch(match);
 	}
 	
-	private void eventMatchStarted(Match match) {
+	private void eventMatchStarted(Match[] match) {
 		for(MatchEvent event : matchEvents)
 			event.MatchStarted(match);
 	}
 	
-	private void eventMatchFinished(Match match) {
+	private void eventMatchFinished(Match[] match) {
 		for(MatchEvent event : matchEvents)
 			event.MatchFinished(match);
 	}
 
-	private void setReminderTimer(Match match) {
+	private void setReminderTimer(Match[] match) {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
 				if(match != null) {
-					Logger.Log("Prematch Triggered! "+match.toString());
+					Logger.Log("Prematch Triggered! "+match.length);
+					for(Match m : match)
+						System.out.println("	"+m.toString());
+					
 					eventPreMatch(match);
 				}else {Logger.Log("ReminderTimer failed! No next match!");}
 			}
 			
-		}, Utils.subtractHour(match.getTime(), 1));
+		}, Utils.subtractHour(match[0].getTime(), 1));
 		Logger.Log("ReminderTimer set for Match "+match.toString());
 	}
 	
-	private void setMatchStartTimer(Match match) {
+	private void setMatchStartTimer(Match[] match) {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
@@ -211,28 +228,42 @@ public class WMManager
 				if(match != null) {
 					currentMatch = match;
 					eventMatchStarted(match);
-					Logger.Log("StartTimer Triggered!");
+					Logger.Log("StartTimer Triggered! " + match.length);
+					for(Match m : match)
+						System.out.println("	"+m.toString());
 				}else {Logger.Log("StartTimer failed! No next match!");}
 			}
 			
-		}, match.getTime());
+		}, match[0].getTime());
 		Logger.Log("StartTimer set for Match "+match.toString());
 	}
 	
-	private void setMatchUpdateTimer(Match match) {
+	private void setMatchUpdateTimer(Match[] match) {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
 				if(match != null) {
-					Logger.Log("Updating match stats");
-					Match m = getMatchUpdate(match.getIndex());
+					Logger.Log("Updating match stats "+match.length);
+					for(Match m : match)
+						System.out.println("	"+m.toString());
+					Match[] m = getMatchUpdates(match);
+					Logger.Log("Updated stats:");
+					for(Match m1 : m)
+						System.out.println("	"+m1.toString());
 					if(m != null) {
 					
-						currentMatch = getMatchUpdate(match.getIndex());//detect score changes?
+						currentMatch = m;//detect score changes?
 						
-						if(currentMatch.getStatus() == MatchStatus.FINISHED) {
+						boolean finished = true;
+						for(Match c : currentMatch) {
+							if(c.getStatus() != MatchStatus.FINISHED) {
+								finished = false;
+							}
+						}
+						
+						if(finished) {
 							eventMatchFinished(currentMatch);
 							currentMatch = null;
 							nextMatch = null;
@@ -243,7 +274,7 @@ public class WMManager
 				}else {Logger.Log("UpdateTimer failed! No next match!");}
 			}
 			
-		}, match.getTime(), 1000 * 3 * 60);
+		}, match[0].getTime(), 1000 * 3 * 60);
 		Logger.Log("UpdateTimer set for Match "+match.toString());
 	}
 
@@ -251,10 +282,23 @@ public class WMManager
 		return matches;
 	}
 	
-	public Match getCurrenMatch() {
+	public Match[] getCurrentMatches() {
 		return currentMatch == null ? nextMatch : currentMatch;
 	}
 	
+	public int getPastMatchCount() {
+		Date date = new Date();
+		for(int i = 0; i < matches.length; i++) {
+			if(matches[i].getTime().after(date)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public int getFutureMatchCount() {
+		return matches.length - getPastMatchCount();
+	}
 	//public Match getNextMatch() {
 	//	return nextMatch;
 	//}
