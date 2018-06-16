@@ -2,6 +2,7 @@ package com.betbot.main;
 
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
+import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import com.betbot.bot.TelegramBot;
@@ -62,6 +63,13 @@ public class Main
 		//bot.sendMessage("Alles klar bei dir?");
 	}
 
+	public static Users[] generateTestUsers()
+	{
+		User phil = new User();
+		
+		return null;
+	}
+	
 	public static boolean InitTelegramBot()
 	{
 		ApiContextInitializer.init();

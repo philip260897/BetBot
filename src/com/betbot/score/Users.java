@@ -21,6 +21,7 @@ public class Users {
 	public String getUsername() {
 		return username;
 	}
+	
 	@Deprecated
 	public void setUsername(String username) {
 		this.username = username;
