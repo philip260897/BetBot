@@ -17,7 +17,7 @@ public class Tip {
 	public Tip(int scoreA, int scoreB, boolean valid) {
 		this.scoreA = scoreA;
 		this.scoreB = scoreB;
-		this.valid =valid;
+		this.valid = valid;
 	}
 	
 	public int getScoreA() {

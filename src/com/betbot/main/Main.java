@@ -28,10 +28,10 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
-		ScoreManager.init();
+		//ScoreManager.init();
 		wmManager.init();
 		
-		//testUsers();
+		testUsers();
 		
 		if(botSuccess)
 		{
@@ -51,8 +51,15 @@ public class Main
 			
 			for(int i = 0; i < wmManager.getFinishedMatchCount(); i++) {
 				Match match = wmManager.getMatches()[i];
+				Tip tip = user.getTips()[i];
 				
-				score += Utils.calculateScore(match, user.getTips()[i]);
+				if(tip.isValid()) {
+					int s =  Utils.calculateScore(match, user.getTips()[i]);
+					
+					System.out.println("\t"+match.getTeamA()+":"+match.getTeamB() + " " + match.getScoreA()+"-"+match.getScoreB() + " Tip: "+tip.getScoreA()+":"+tip.getScoreB() + " score: "+s);
+					
+					score+=s;
+				}
 			}
 			user.setScore(score);
 			Logger.Log("User: "+user.getUsername()+" - score: "+score);

@@ -89,7 +89,7 @@ public class Utils
 	{
 		int winnerScore = Utils.isWinner(match.getScoreA(), match.getScoreB());
 		int differenceScore = Math.abs(match.getScoreA()-match.getScoreB());
-		
+
 		int winnerTip = Utils.isWinner(tip.getScoreA(), tip.getScoreB());
 		int differenceTip = Math.abs(tip.getScoreA()-tip.getScoreB());
 
@@ -98,14 +98,15 @@ public class Utils
 			return 5;
 		}
 		else
-			//nur Tendenz: 2 Punkte
-			if(winnerTip==winnerScore){
-				return 2;
+			//Tendenz und Tordifferenz: 3 Punkte
+			if(winnerTip==winnerScore && differenceTip == differenceScore){
+				return 3;
 			}
 			else 
-				//Tendenz und Tordifferenz: 3 Punkte
-				if(winnerTip==winnerScore && differenceTip == differenceScore){
-					return 3;
+
+				//nur Tendenz: 2 Punkte
+				if(winnerTip==winnerScore){
+					return 2;
 				}
 		return 0;
 	}
