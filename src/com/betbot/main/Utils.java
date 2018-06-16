@@ -19,7 +19,9 @@ public class Utils
 	public static String getText(String url) throws Exception 
 	{
         URL website = new URL(url);
+        
         URLConnection connection = website.openConnection();
+        connection.setRequestProperty("X-Auth-Token", "9f296fbd4e524b3fbae33dc3d1a78bdf");
         BufferedReader in = new BufferedReader(new InputStreamReader( connection.getInputStream()));
 
         StringBuilder response = new StringBuilder();

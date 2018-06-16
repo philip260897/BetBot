@@ -167,6 +167,7 @@ public class WMManager
 				if(match.getStatus() == MatchStatus.IN_PLAY)
 					m.add(match);
 			}
+			if(m.size() == 0) return null;
 			return m.toArray(new Match[m.size()]);
 		}
 		return null;

@@ -1,5 +1,8 @@
 package com.betbot.main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.objects.User;
@@ -11,6 +14,7 @@ import com.betbot.score.ScoreLoader;
 import com.betbot.score.ScoreManager;
 import com.betbot.score.Tip;
 import com.betbot.score.Users;
+import com.betbot.wm.Match;
 import com.betbot.wm.WMManager;
 
 public class Main 
@@ -25,8 +29,10 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
-		ScoreManager.init();
+		//ScoreManager.init();
 		wmManager.init();
+		
+		testUsers();
 		
 		/*Users[] users = new Users[2];
 		Users user1 = new Users();
@@ -63,8 +69,26 @@ public class Main
 		//bot.sendMessage("Alles klar bei dir?");
 	}
 
-	public static testUsers() {
+	public static void testUsers() {
 		Users[] users = generateTestUsers();
+		
+		
+		for(Users user : users) {
+			int score = 0;
+			
+			for(int i = 0; i < wmManager.getFinishedMatchCount(); i++) {
+				Match match = wmManager.getMatches()[i];
+				
+				score += Utils.calculateScore(match, user.getTips()[i]);
+			}
+			user.setScore(score);
+			Logger.Log("User: "+user.getUsername()+" - score: "+score);
+		}
+		
+		List<Users> list = new ArrayList<Users>();
+		for(Users user : users)
+			list.add(user);
+		ScoreLoader.saveUsers(list);
 	}
 	
 	public static Users[] generateTestUsers()
