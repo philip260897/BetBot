@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
-import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import com.betbot.bot.TelegramBot;
@@ -29,35 +28,10 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
-		//ScoreManager.init();
+		ScoreManager.init();
 		wmManager.init();
 		
-		testUsers();
-		
-		/*Users[] users = new Users[2];
-		Users user1 = new Users();
-		user1.setUsername("xStachelbaer");
-		Tip tip = new Tip();
-		tip.setScoreA(5);
-		tip.setScoreB(2);
-		user1.getTips()[0] = tip;
-		
-		Users user2 = new Users();
-		user2.setUsername("Hurenknecht");
-		Tip tip2 = new Tip();
-		tip2.setScoreA(1);
-		tip2.setScoreB(0);
-		user2.getTips()[0] = tip2;
-		
-		users[0] = user1;
-		users[1] = user2;
-		ScoreLoader.saveUsers(users);
-		
-		Users[] users2 = ScoreLoader.loadUsers();
-		for(Users user : users2)
-		{
-			System.out.println(user.getUsername()+ " " + user.getTips()[0].getScoreA() + " " + user.getTips()[0].getScoreB());
-		}*/
+		//testUsers();
 		
 		if(botSuccess)
 		{
@@ -71,7 +45,6 @@ public class Main
 
 	public static void testUsers() {
 		Users[] users = generateTestUsers();
-		
 		
 		for(Users user : users) {
 			int score = 0;
