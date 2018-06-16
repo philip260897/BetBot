@@ -6,6 +6,14 @@ public class Tip {
 	private int scoreB;
 	private boolean valid;
 	
+	public Tip() {
+		valid = false;
+	}
+	
+	public Tip(int scoreA, int scoreB) {
+		this(scoreA, scoreB, true);
+	}
+	
 	public Tip(int scoreA, int scoreB, boolean valid) {
 		this.scoreA = scoreA;
 		this.scoreB = scoreB;
