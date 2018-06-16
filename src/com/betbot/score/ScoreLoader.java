@@ -40,6 +40,7 @@ public class ScoreLoader
 						Tip t = new Tip();
 						t.setScoreA(tip.getInt("scoreA"));
 						t.setScoreB(tip.getInt("scoreB"));
+						t.setValid(tip.getBoolean("valid"));
 						ttips[j] = t;
 					}
 					
@@ -73,6 +74,7 @@ public class ScoreLoader
 				JSONObject jtip = new JSONObject();
 				jtip.put("scoreA", tip.getScoreA());
 				jtip.put("scoreB", tip.getScoreB());
+				jtip.put("valild", tip.isValid());
 				tips.put(jtip);
 			}
 			root.put("tips", tips);

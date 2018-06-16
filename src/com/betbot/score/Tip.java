@@ -4,6 +4,13 @@ public class Tip {
 	
 	private int scoreA;
 	private int scoreB;
+	private boolean valid;
+	
+	public Tip(int scoreA, int scoreB, boolean valid) {
+		this.scoreA = scoreA;
+		this.scoreB = scoreB;
+		this.valid =valid;
+	}
 	
 	public int getScoreA() {
 		return scoreA;
@@ -17,5 +24,11 @@ public class Tip {
 	public void setScoreB(int scoreB) {
 		this.scoreB = scoreB;
 	}
-
+	public boolean isValid() {
+		return valid;
+	}
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
+	
 }
