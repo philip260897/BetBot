@@ -29,18 +29,13 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
-		//ScoreManager.init();
+		ScoreManager.init();
 		LiveTicker.init();
 		LiveTicker.setEnabled(true);
 		
 		wmManager.init();
 		
 		testUsers();
-		
-		System.out.println("Today");
-		Match[] m = wmManager.getTodaysMatches();
-		for(Match mm : m)
-			System.out.println(mm);
 
 		
 		if(botSuccess)
