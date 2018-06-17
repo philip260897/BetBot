@@ -38,16 +38,31 @@ public class WMManager
 	public void init()
 	{
 		matches = downloadMatches();
-		for(Match match : matches)
-			System.out.println(match);
-		
-		Match[] nexts = updateNextMatches();
-		System.out.println("Nexts: ");
-		for(Match m : nexts) {
-			System.out.println(m);
+		if(matches != null)
+		{
+			//DO NOT REMOVE================
+			for(Match m : matches)
+				m.toString();
+			//DO NOT REMOVE================
+			
+			Logger.Log("Loaded Matches: "+matches.length+" Finished Matches: "+this.getFinishedMatchCount());
+			Match[] current = this.getCurrentMatches();
+			if(current != null)
+			{
+				Logger.Log("Currently playing Matches: "+current.length);
+				for(Match match : current)
+					Logger.Log("\t"+match);
+			}
+			
+			Match[] nexts = updateNextMatches();
+			Logger.Log("Upcoming matches: "+nexts.length);
+			for(Match m : nexts) {
+				Logger.Log("\t"+m);
+			}
+			
+			update();
 		}
-		
-		update();
+		else {Logger.Log("Failed to initialize Matches! Plz try again!");}
 	}
 	
 	private void update()
@@ -222,62 +237,70 @@ public class WMManager
 	}
 
 	private void setReminderTimer(Match[] match) {
+		Logger.Log("Setting ReminderTimer for "+match.length + " match(es) ("+Utils.getFormated(match[0].getTime(), "yyyy-MM-dd HH:mm:ss")+")");
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
 				if(match != null) {
-					Logger.Log("Prematch Triggered! "+match.length);
+					Logger.Log("[Event] Triggering Prematch ("+match.length+")");
 					for(Match m : match)
-						System.out.println("	"+m.toString());
+						Logger.Log("	"+m.toString());
 					
 					eventPreMatch(match);
-				}else {Logger.Log("ReminderTimer failed! No next match!");}
+				}else {Logger.Log("[Event] ReminderTimer failed! No next match!");}
 			}
 			
 		}, Utils.subtractHour(match[0].getTime(), 1));
-		Logger.Log("ReminderTimer set for Match "+match.toString());
+		
 	}
 	
 	private void setMatchStartTimer(Match[] match) {
+		Logger.Log("Setting StartTimer for "+match.length + " match(es) ("+Utils.getFormated(match[0].getTime(), "yyyy-MM-dd HH:mm:ss")+")");
+		
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
-				//currentMatch = nextMatch;
 				if(match != null) {
 					currentMatch = match;
 					eventMatchStarted(match);
+					
 					for(int i = 0; i < match.length; i++)
 						eventLiveTickerStarted(match[i]);
-					Logger.Log("StartTimer Triggered! " + match.length);
+					
+					Logger.Log("[Event] Triggering Match Start ("+match.length+")");
 					for(Match m : match)
-						System.out.println("	"+m.toString());
-				}else {Logger.Log("StartTimer failed! No next match!");}
+						Logger.Log("	"+m.toString());
+					
+				}else {Logger.Log("[Event] StartTimer failed! No next match!");}
 			}
 			
 		}, match[0].getTime());
-		Logger.Log("StartTimer set for Match "+match.toString());
+		
 	}
 	
 	private void setMatchUpdateTimer(Match[] match) {
+		Logger.Log("Setting MatchUpdateTimer for "+match.length + " match(es) ("+Utils.getFormated(match[0].getTime(), "yyyy-MM-dd HH:mm:ss")+")");
+		
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
 				if(match != null) {
-					Logger.Log("Updating match stats "+match.length);
+					Logger.Log("[Event] Triggering Match Updates ("+match.length+")");
 					for(Match m : match)
-						System.out.println("	"+m.toString());
+						Logger.Log("	"+m.toString());
+					
 					Match[] m = getMatchUpdates(match);
 
 					if(m != null) {
-						Logger.Log("Updated stats:");
+						Logger.Log("Match Updates: ");
 						for(Match m1 : m)
-							System.out.println("	"+m1.toString());
+							Logger.Log("	"+m1.toString());
 						
 						//Live Ticker update
 						for(int i = 0; i < m.length; i++) {
@@ -307,13 +330,12 @@ public class WMManager
 							timer.cancel();
 						}
 					} else {
-						Logger.Log("Match update failed!");
+						Logger.Log("[Event] Match update failed!");
 					}
-				}else {Logger.Log("UpdateTimer failed! No next match!");}
+				}else {Logger.Log("[Event] UpdateTimer failed! No next match!");}
 			}
 			
 		}, match[0].getTime(), 1000 * 3 * 60);
-		Logger.Log("UpdateTimer set for Match "+match.toString());
 	}
 
 	private boolean hasGoalsChanged(Match match1, Match match2) {
@@ -332,11 +354,15 @@ public class WMManager
 		return currentMatch == null ? nextMatch : currentMatch;
 	}
 	
+	public Match[] getPlayingMatches() {
+		return currentMatch;
+	}
+	
 	public Match[] getTodaysMatches() {
 		Date today = new Date();
 		List<Match> matches = new ArrayList<Match>();
 		for(Match match : this.matches) {
-			if(match.getTime().getDate() == today.getDate() && match.getTime().getMonth() == today.getMonth()) {
+			if(match.getTime().getDate() == today.getDate() && match.getTime().getMonth() == today.getMonth() && match.getTime().getYear() == today.getYear()) {
 				matches.add(match);
 			}
 		}

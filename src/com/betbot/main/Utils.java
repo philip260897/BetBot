@@ -85,6 +85,7 @@ public class Utils
 	public static String getFormated(Date date, String format) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
 		return dateFormat.format(date);
+		//return "";
 	}
 	
 	public static Date subtractHour(Date date, int hours) {

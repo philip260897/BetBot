@@ -35,7 +35,7 @@ public class Main
 		
 		wmManager.init();
 		
-		testUsers();
+		//testUsers();
 
 		
 		if(botSuccess)
