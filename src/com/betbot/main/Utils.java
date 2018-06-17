@@ -1,6 +1,10 @@
 package com.betbot.main;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -34,6 +38,34 @@ public class Utils
 
         return response.toString();
     }
+	
+	public static String readFile(String filePath) {
+		try {
+			File file = new File(filePath);
+			if(file.exists()) {
+				String json = "";
+				String line = "";
+				BufferedReader reader = new BufferedReader(new FileReader(filePath));
+				while((line = reader.readLine()) != null) {
+					json += line;
+				}
+				reader.close();
+				return json;
+			}
+		}catch(Exception ex) {ex.printStackTrace();}
+		return null;
+	}
+	
+	public static void writeFile(String file, String text) {
+		try {
+			FileWriter writer = new FileWriter(file);
+			writer.write(text);
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public static Date getDate(String timestamp, String format)
 	{
