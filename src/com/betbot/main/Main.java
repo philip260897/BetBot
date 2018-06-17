@@ -36,14 +36,6 @@ public class Main
 		wmManager.init();
 		
 		//testUsers();
-
-		
-		if(botSuccess)
-		{
-			Logger.Log("Listening in Telegram Group");
-			StartListening();
-			//bot.sendMessage("Du Hodenknecht");
-		}
 		
 		//bot.sendMessage("Alles klar bei dir?");
 	}
@@ -201,30 +193,6 @@ public class Main
             e.printStackTrace();
         }
         return false;
-	}
-	
-	public static void StartListening()
-	{
-		bot.addTelegramBotEvent(new TelegramBotEvent() {
-
-			@Override
-			public void MessageReceived(String message, String sender, long chatId) {
-				System.out.println("Message received: "+message+" ["+sender+"]");
-			}
-
-			@Override
-			public void CommandReceived(String cmd, String[] args, String sender, long chatId) {
-				
-				String argss = "";
-				for(String s : args) {
-					argss += s + " ";
-				}
-				
-				System.out.println("Command received: "+cmd+" ["+sender+"] "+ argss);
-				
-			}
-			
-		});
 	}
 	
 	public static WMManager getWMManager() {

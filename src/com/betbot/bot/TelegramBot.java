@@ -8,10 +8,14 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import com.betbot.main.Logger;
+
 public class TelegramBot extends TelegramLongPollingBot
 {
 	private List<TelegramBotEvent> telegramEvents = new ArrayList<TelegramBotEvent>();
 	private long CHAT_ID = 13451740L;
+	
+	private boolean first = false;
 	
 	public void addTelegramBotEvent(TelegramBotEvent event) {
 		this.telegramEvents.add(event);
@@ -23,7 +27,12 @@ public class TelegramBot extends TelegramLongPollingBot
 		
 		if(update.hasMessage() && update.getMessage().hasText())
 		{
-			System.out.println(update.getMessage().getChatId());
+			if(!first) {
+				Logger.Log("Current Telegram Chat_ID: "+update.getMessage().getChatId());
+				first = true;
+			}
+			
+			
 			if(!update.getMessage().getText().startsWith("/")) {
 				eventMessageReceived(update.getMessage().getText(), update.getMessage().getFrom().getFirstName(), update.getMessage().getChatId());
 			} else {
