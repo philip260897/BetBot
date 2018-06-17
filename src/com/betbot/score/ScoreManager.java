@@ -95,7 +95,7 @@ public class ScoreManager {
 					}
 					if(cmd.equalsIgnoreCase("getscore")){
 						Users s = getUser(sender);
-						Logger.Log(""+s.getScore());
+						Main.getTelegramBot().sendMessage(""+s.getScore(), chatId);
 							
 						}
 
