@@ -13,7 +13,7 @@ import com.betbot.main.Logger;
 public class TelegramBot extends TelegramLongPollingBot
 {
 	private List<TelegramBotEvent> telegramEvents = new ArrayList<TelegramBotEvent>();
-	private long CHAT_ID = 13451740L;
+	private long CHAT_ID = -241083590L;
 	
 	private boolean first = false;
 	
