@@ -272,11 +272,12 @@ public class WMManager
 					for(Match m : match)
 						System.out.println("	"+m.toString());
 					Match[] m = getMatchUpdates(match);
-					Logger.Log("Updated stats:");
-					for(Match m1 : m)
-						System.out.println("	"+m1.toString());
+
 					if(m != null) {
-					
+						Logger.Log("Updated stats:");
+						for(Match m1 : m)
+							System.out.println("	"+m1.toString());
+						
 						//Live Ticker update
 						for(int i = 0; i < m.length; i++) {
 							if(hasGoalsChanged(currentMatch[i], m[i])) {
@@ -304,6 +305,8 @@ public class WMManager
 							update();
 							timer.cancel();
 						}
+					} else {
+						Logger.Log("Match update failed!");
 					}
 				}else {Logger.Log("UpdateTimer failed! No next match!");}
 			}

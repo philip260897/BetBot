@@ -29,7 +29,7 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
-		ScoreManager.init();
+		//ScoreManager.init();
 		LiveTicker.init();
 		LiveTicker.setEnabled(true);
 		
