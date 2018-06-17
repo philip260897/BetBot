@@ -59,6 +59,14 @@ public class Match
 		return index;
 	}
 	
+	public void setScoreA(int score) {
+		scoreA = score;
+	}
+	
+	public void setMatchStatus(MatchStatus status) {
+		this.status =status;
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if(o instanceof Match) {

@@ -13,6 +13,7 @@ import com.betbot.score.ScoreLoader;
 import com.betbot.score.ScoreManager;
 import com.betbot.score.Tip;
 import com.betbot.score.Users;
+import com.betbot.wm.LiveTicker;
 import com.betbot.wm.Match;
 import com.betbot.wm.WMManager;
 
@@ -28,10 +29,15 @@ public class Main
 		Logger.LogResult(botSuccess ? "OK" : "FAILED");
 		
 		wmManager = new WMManager();
-		ScoreManager.init();
+		//ScoreManager.init();
+		LiveTicker.init();
+		LiveTicker.setEnabled(true);
+		
 		wmManager.init();
 		
 		testUsers();
+		
+
 		
 		if(botSuccess)
 		{
@@ -85,6 +91,10 @@ public class Main
 		phil.getTips()[6] = new Tip(0, 1);
 		phil.getTips()[7] = new Tip(0, 1);
 		
+		phil.getTips()[8] = new Tip(1, 0);
+		phil.getTips()[9] = new Tip(2, 0);
+		phil.getTips()[10] = new Tip(2, 0);
+		
 		Users ben = new Users("Ben :D");
 		ben.getTips()[0] = new Tip(1, 0);
 		
@@ -97,6 +107,10 @@ public class Main
 		ben.getTips()[6] = new Tip(1, 1);
 		ben.getTips()[7] = new Tip(2, 1);
 		
+		ben.getTips()[8] = new Tip(0, 0);
+		ben.getTips()[9] = new Tip(1, 0);
+		ben.getTips()[10] = new Tip(2, 1);
+		
 		Users adrian = new Users("Adrian");
 		adrian.getTips()[0] = new Tip(2, 1);
 		
@@ -108,6 +122,10 @@ public class Main
 		adrian.getTips()[5] = new Tip(2, 1);
 		adrian.getTips()[6] = new Tip(1, 1);
 		adrian.getTips()[7] = new Tip(2, 1);
+		
+		adrian.getTips()[8] = new Tip(1, 2);
+		adrian.getTips()[9] = new Tip(2, 0);
+		adrian.getTips()[10] = new Tip(3, 1);
 		
 		Users fabi = new Users("Fabi");
 		fabi.getTips()[0] = new Tip(2, 0);
@@ -133,6 +151,10 @@ public class Main
 		holzer.getTips()[6] = new Tip(1, 1);
 		holzer.getTips()[7] = new Tip(2, 0);
 		
+		holzer.getTips()[8] = new Tip(0, 1);
+		holzer.getTips()[9] = new Tip(2, 0);
+		holzer.getTips()[10] = new Tip(2, 0);
+		
 		Users timon = new Users("Timon");
 		timon.getTips()[0] = new Tip(3, 1);
 		
@@ -145,6 +167,10 @@ public class Main
 		timon.getTips()[6] = new Tip(1, 1);
 		timon.getTips()[7] = new Tip(2, 1);
 		
+		timon.getTips()[8] = new Tip(0, 1);
+		timon.getTips()[9] = new Tip(3, 1);
+		timon.getTips()[10] = new Tip(3, 0);
+		
 		Users lipa = new Users("Lipa");
 		lipa.getTips()[0] = new Tip(3, 1);
 		
@@ -156,6 +182,10 @@ public class Main
 		lipa.getTips()[5] = new Tip(2, 1);
 		lipa.getTips()[6] = new Tip(0, 2);
 		lipa.getTips()[7] = new Tip(2, 0);
+		
+		lipa.getTips()[8] = new Tip(0, 1);
+		lipa.getTips()[9] = new Tip(3, 1);
+		lipa.getTips()[10] = new Tip(3, 1);
 		
 		return new Users[] {phil, adrian, ben, lipa, timon, holzer, fabi};
 	}

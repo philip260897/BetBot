@@ -16,6 +16,7 @@ public class WMManager
 {
 	private static String MATCH_URL = "http://api.football-data.org/v1/competitions/467/fixtures";
 	private List<MatchEvent> matchEvents = new ArrayList<MatchEvent>();
+	private LiveTickerEvent tickerEvent;
 	
 	private Match[] matches;
 	
@@ -24,6 +25,10 @@ public class WMManager
 	
 	public WMManager() {
 		
+	}
+	
+	public void setLiveTickerEvent(LiveTickerEvent event) {
+		this.tickerEvent = event;
 	}
 	
 	public void addMatchEvent(MatchEvent event) {
@@ -102,7 +107,7 @@ public class WMManager
 				Date ddate = Utils.getDate(date, "yyyy-MM-dd HH:mm:ss");
 				ddate = Utils.subtractHour(ddate, -2);
 				
-				/*if(i == 4 || i == 5) {
+				/*if(i == 7 || i == 8) {
 					//ddate = fix;
 					status = MatchStatus.IN_PLAY;
 					ddate.setHours(12);
@@ -199,6 +204,21 @@ public class WMManager
 		for(MatchEvent event : matchEvents)
 			event.MatchFinished(match);
 	}
+	
+	private void eventLiveTickerStarted(Match match) {
+		if(tickerEvent != null)
+			tickerEvent.liveTickerStart(match);
+	}
+	
+	private void eventLiveTickerEnd(Match match) {
+		if(tickerEvent != null)
+			tickerEvent.liveTickerEnd(match);
+	}
+	
+	private void eventLiveTickerGoal(Match match) {
+		if(tickerEvent != null)
+			tickerEvent.liveTickerGoal(match);
+	}
 
 	private void setReminderTimer(Match[] match) {
 		Timer timer = new Timer();
@@ -229,6 +249,8 @@ public class WMManager
 				if(match != null) {
 					currentMatch = match;
 					eventMatchStarted(match);
+					for(int i = 0; i < match.length; i++)
+						eventLiveTickerStarted(match[i]);
 					Logger.Log("StartTimer Triggered! " + match.length);
 					for(Match m : match)
 						System.out.println("	"+m.toString());
@@ -255,13 +277,24 @@ public class WMManager
 						System.out.println("	"+m1.toString());
 					if(m != null) {
 					
+						//Live Ticker update
+						for(int i = 0; i < m.length; i++) {
+							if(hasGoalsChanged(currentMatch[i], m[i])) {
+								eventLiveTickerGoal(m[i]);
+							}
+							if(hasMatchFinished(currentMatch[i], m[i])) {
+								eventLiveTickerEnd(m[i]);
+							}
+						}
+						
+						
 						currentMatch = m;//detect score changes?
 						
 						boolean finished = true;
 						for(Match c : currentMatch) {
 							if(c.getStatus() != MatchStatus.FINISHED) {
 								finished = false;
-							}
+							} 
 						}
 						
 						if(finished) {
@@ -279,6 +312,14 @@ public class WMManager
 		Logger.Log("UpdateTimer set for Match "+match.toString());
 	}
 
+	private boolean hasGoalsChanged(Match match1, Match match2) {
+		return !(match1.getScoreA() == match2.getScoreA() && match1.getScoreB() == match2.getScoreB());
+	}
+	
+	private boolean hasMatchFinished(Match match1, Match match2) {
+		return match1.getStatus() == MatchStatus.IN_PLAY && match2.getStatus() == MatchStatus.FINISHED;
+	}
+	
 	public Match[] getMatches() {
 		return matches;
 	}
