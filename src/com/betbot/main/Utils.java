@@ -80,7 +80,7 @@ public class Utils
 	public static String insultGenerator(){
 
 		Random rand = new Random();
-		String insults[] = {"ABS-Bremser","dumme Fickhure","Schwingtitte","Analbanane","Analdin", "Hodenknecht", "Wixgsicht", "Otto", "Gsicht", "Hurenknecht", "Wixkopf", "Hobelschlunze", "Schlingel", "Nichtsnutz"};
+		String insults[] = {"Spast", "ABS-Bremser","dumme Fickhure","Schwingtitte","Analbanane","Analdin", "Hodenknecht", "Wixgsicht", "Otto", "Gsicht", "Hurenknecht", "Wixkopf", "Hobelschlunze", "Schlingel", "Nichtsnutz"};
 		int  n = rand.nextInt(insults.length);
 		return insults[n];
 	}
