@@ -15,28 +15,31 @@ import java.util.Date;
 import java.util.Random;
 
 import com.betbot.score.Tip;
-import com.betbot.score.Users;
 import com.betbot.wm.Match;
 
 public class Utils 
 {
-	public static String getText(String url) throws Exception 
+	public static String getText(String url) 
 	{
-        URL website = new URL(url);
-        
-        URLConnection connection = website.openConnection();
-        connection.setRequestProperty("X-Auth-Token", "9f296fbd4e524b3fbae33dc3d1a78bdf");
-        BufferedReader in = new BufferedReader(new InputStreamReader( connection.getInputStream()));
-
-        StringBuilder response = new StringBuilder();
-        String inputLine;
-
-        while ((inputLine = in.readLine()) != null) 
-            response.append(inputLine);
-
-        in.close();
-
-        return response.toString();
+		try {
+	        URL website = new URL(url);
+	        
+	        URLConnection connection = website.openConnection();
+	        connection.setRequestProperty("X-Auth-Token", "9f296fbd4e524b3fbae33dc3d1a78bdf");
+	        BufferedReader in = new BufferedReader(new InputStreamReader( connection.getInputStream()));
+	
+	        StringBuilder response = new StringBuilder();
+	        String inputLine;
+	
+	        while ((inputLine = in.readLine()) != null) 
+	            response.append(inputLine);
+	
+	        in.close();
+	
+	        //return null;
+	        return response.toString();
+		}catch(Exception ex) {ex.printStackTrace();}
+		return null;
     }
 	
 	public static String readFile(String filePath) {

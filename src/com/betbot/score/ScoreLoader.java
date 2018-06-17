@@ -11,20 +11,15 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.betbot.main.Utils;
+
 public class ScoreLoader 
 {
 	public static List<Users> loadUsers()
 	{
 		try {
-			File file = new File("save.json");
-			if(file.exists()) {
-				String json = "";
-				String line = "";
-				BufferedReader reader = new BufferedReader(new FileReader("save.json"));
-				while((line = reader.readLine()) != null) {
-					json += line;
-				}
-				reader.close();
+			String json = Utils.readFile("save.json");
+			if(json != null) {
 
 				List<Users> users = new ArrayList<Users>();
 				JSONArray array = new JSONArray(json);
@@ -44,8 +39,7 @@ public class ScoreLoader
 						ttips[j] = t;
 					}
 					
-					Users user = new Users();
-					user.setUsername(username);
+					Users user = new Users(username);
 					user.setScore(score);
 					user.setTips(ttips);
 					users.add(user);
@@ -80,15 +74,7 @@ public class ScoreLoader
 			root.put("tips", tips);
 			rootArray.put(root);
 		}
-		try {
-			FileWriter writer = new FileWriter("save.json");
-			writer.write(rootArray.toString());
-			writer.flush();
-			writer.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//System.out.println(rootArray.toString());
+
+		Utils.writeFile("save.json", rootArray.toString());
 	}
 }

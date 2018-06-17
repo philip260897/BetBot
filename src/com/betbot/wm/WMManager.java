@@ -73,57 +73,58 @@ public class WMManager
 	private Match[] downloadMatches()
 	{
 		Logger.LogForResult("Trying to download Match info");
-		try 
-		{
-			String json_raw = Utils.getText(MATCH_URL);
-			Logger.LogResult("OK");
-			
-			List<Match> matches = new ArrayList<Match>();
-			
-			Logger.LogForResult("Trying to parse JSON");
-			JSONObject obj = new JSONObject(json_raw);
-			JSONArray fixtures = obj.getJSONArray("fixtures");
-			Date fix = new Date();
-			for(int i = 0; i < fixtures.length(); i++)
-			{
-				JSONObject matchObj = fixtures.getJSONObject(i);
-				String date = matchObj.getString("date").replaceAll("T", " ").replaceAll("Z", "");
-				MatchStatus status = null;
-				//if(i == 1)
-					//status = MatchStatus.IN_PLAY;
-				///else
-					status = MatchStatus.valueOf(matchObj.getString("status"));
-				String teamA = matchObj.getString("homeTeamName");
-				String teamB = matchObj.getString("awayTeamName");
-				
-				int scoreA = 0;
-				int scoreB = 0;
-				
-				try {
-				scoreA = matchObj.getJSONObject("result").getInt("goalsHomeTeam");
-				scoreB = matchObj.getJSONObject("result").getInt("goalsAwayTeam");
-				} catch(Exception ex) {}
-				
-				Date ddate = Utils.getDate(date, "yyyy-MM-dd HH:mm:ss");
-				ddate = Utils.subtractHour(ddate, -2);
-				
-				/*if(i == 7 || i == 8) {
-					//ddate = fix;
-					status = MatchStatus.IN_PLAY;
-					ddate.setHours(12);
-				}*/
-				
-				//ddate.setHours(11);
-				//ddate.setMinutes(25);
-				
-				Match match = new Match(teamA, teamB, status, scoreA, scoreB, ddate, i);
-				matches.add(match);
+		String json_raw = Utils.getText(MATCH_URL);
+		if(json_raw == null) {
+			Logger.LogResult("FAILED");
+			Logger.LogForResult("Trying to load cached Matches");
+			json_raw = Utils.readFile("API_Cache.json");
+			if(json_raw == null) {
+				Logger.LogResult("FAILED");
+				return null;
 			}
-			Logger.LogResult("OK");
-			return matches.toArray(new Match[matches.size()]);
+		} else {
+			Utils.writeFile("API_Cache.json", json_raw);
 		}
-		catch(Exception ex) {Logger.LogResult("FAILED");ex.printStackTrace();}
-		return null;
+		Logger.LogResult("OK");	
+			
+		return parseMatches(json_raw);
+	}
+	
+	private Match[] parseMatches(String json) {
+		List<Match> matches = new ArrayList<Match>();
+		
+		Logger.LogForResult("Trying to parse JSON");
+		JSONObject obj = new JSONObject(json);
+		JSONArray fixtures = obj.getJSONArray("fixtures");
+		Date fix = new Date();
+		for(int i = 0; i < fixtures.length(); i++)
+		{
+			JSONObject matchObj = fixtures.getJSONObject(i);
+			String date = matchObj.getString("date").replaceAll("T", " ").replaceAll("Z", "");
+			MatchStatus status = null;
+			//if(i == 1)
+				//status = MatchStatus.IN_PLAY;
+			///else
+				status = MatchStatus.valueOf(matchObj.getString("status"));
+			String teamA = matchObj.getString("homeTeamName");
+			String teamB = matchObj.getString("awayTeamName");
+			
+			int scoreA = 0;
+			int scoreB = 0;
+			
+			try {
+			scoreA = matchObj.getJSONObject("result").getInt("goalsHomeTeam");
+			scoreB = matchObj.getJSONObject("result").getInt("goalsAwayTeam");
+			} catch(Exception ex) {}
+			
+			Date ddate = Utils.getDate(date, "yyyy-MM-dd HH:mm:ss");
+			ddate = Utils.subtractHour(ddate, -2);
+			
+			Match match = new Match(teamA, teamB, status, scoreA, scoreB, ddate, i);
+			matches.add(match);
+		}
+		Logger.LogResult("OK");
+		return matches.toArray(new Match[matches.size()]);
 	}
 	
 	private Match[] getMatchUpdates(Match[] matches) {
@@ -329,6 +330,19 @@ public class WMManager
 	
 	public Match[] getCurrentMatches() {
 		return currentMatch == null ? nextMatch : currentMatch;
+	}
+	
+	public Match[] getTodaysMatches() {
+		Date today = new Date();
+		List<Match> matches = new ArrayList<Match>();
+		for(Match match : this.matches) {
+			if(match.getTime().getDate() == today.getDate() && match.getTime().getMonth() == today.getMonth()) {
+				matches.add(match);
+			}
+		}
+		if(matches.size() > 0)
+			return matches.toArray(new Match[matches.size()]);
+		return null;
 	}
 	
 	public int getFinishedMatchCount() {

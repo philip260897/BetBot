@@ -37,6 +37,10 @@ public class Main
 		
 		testUsers();
 		
+		System.out.println("Today");
+		Match[] m = wmManager.getTodaysMatches();
+		for(Match mm : m)
+			System.out.println(mm);
 
 		
 		if(botSuccess)
