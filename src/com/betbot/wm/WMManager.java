@@ -67,6 +67,8 @@ public class WMManager
 	
 	private void update()
 	{
+
+		
 		Match[] current = updateCurrentMatches();
 		if(currentMatch == null && current != null) {
 			setReminderTimer(current);
@@ -331,6 +333,7 @@ public class WMManager
 							eventMatchFinished(currentMatch);
 							currentMatch = null;
 							nextMatch = null;
+							matches = downloadMatches();
 							update();
 							timer.cancel();
 						}
