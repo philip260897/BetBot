@@ -2,8 +2,8 @@ package com.betbot.score;
 
 public class Tip {
 	
-	private int scoreA;
-	private int scoreB;
+	private int scoreA = -1;
+	private int scoreB = -1;
 	private boolean valid;
 	
 	public Tip() {
@@ -38,5 +38,7 @@ public class Tip {
 	public void setValid(boolean valid) {
 		this.valid = valid;
 	}
-	
+	public boolean isFirst() {
+		return scoreA == -1 && scoreB == -1;
+	}
 }

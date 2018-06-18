@@ -116,15 +116,15 @@ public class ScoreManager
 					if(cmd.equalsIgnoreCase("history")) {
 						Users s = getUser(sender);
 						if(s != null)
-							Main.getTelegramBot().sendMessage(getHistory(s));
+							Main.getTelegramBot().sendMessage(getHistory(s), chatId);
 					}
 					if(cmd.equalsIgnoreCase("bet")){
 						Match currentMatch[] = Main.getWMManager().getCurrentMatches();
 						int checkInPlay = 0;
-						if(match[currentMatch.length].getStatus() == MatchStatus.IN_PLAY && checkInPlay == 0){
-							Main.getTelegramBot().sendMessage("Jetzt wird nicht gewettet du "+Utils.insultGenerator(),chatId);
-							checkInPlay = 1;
-						}else{
+						//if(match[currentMatch.length].getStatus() == MatchStatus.IN_PLAY && checkInPlay == 0){
+						//	Main.getTelegramBot().sendMessage("Jetzt wird nicht gewettet du "+Utils.insultGenerator(),chatId);
+						//	checkInPlay = 1;
+						//}else{
 							Users s = getUser(sender); 
 							if(args.length == 2 && args[1].length() == 3 
 									&& StringUtils.isNumeric((args[0])) 
@@ -133,6 +133,7 @@ public class ScoreManager
 									&& Character.isDigit((args[1].charAt(2))))
 							{
 								Match matchTip = Main.getWMManager().getMatches()[Integer.parseInt(args[0])];
+								Tip tip = s.getTips()[Integer.parseInt(args[0])];
 								if(matchTip.getTime().after(new Date())) {
 								
 									s.getTips()[Integer.parseInt(args[0])].setScoreA(Character.getNumericValue(args[1].charAt(0)));
@@ -142,6 +143,17 @@ public class ScoreManager
 								
 								} else {
 									Logger.Log("User "+sender+" hat versucht zu cheaten der "+Utils.insultGenerator());
+									if(tip.isFirst()) {
+										s.getTips()[Integer.parseInt(args[0])].setScoreA(Character.getNumericValue(args[1].charAt(0)));
+										s.getTips()[Integer.parseInt(args[0])].setScoreB(Character.getNumericValue(args[1].charAt(2)));
+										s.getTips()[Integer.parseInt(args[0])].setValid(false);
+										ScoreLoader.saveUsers(users);
+										Main.getTelegramBot().sendMessage("Tipp ist leider zu spaet du "+Utils.insultGenerator(), chatId);
+										Logger.Log("Tipp ist leider zu spaet du "+Utils.insultGenerator());
+									} else {
+										Main.getTelegramBot().sendMessage("Hör doch auf zu Hacken du "+Utils.insultGenerator(), chatId);
+										Logger.Log("Hör doch auf zu Hacken du "+Utils.insultGenerator());
+									}
 								}
 							}
 							else { 
@@ -150,7 +162,7 @@ public class ScoreManager
 
 
 
-						}
+						//}
 
 					}
 
@@ -226,6 +238,10 @@ public class ScoreManager
 			user.setScore(score);
 		}
 		ScoreLoader.saveUsers(users);
+	}
+	
+	public static List<Users> getUsers() {
+		return users;
 	}
 	
 	public static String sorting(){
