@@ -22,6 +22,8 @@ public class Main
 	private static TelegramBot bot;
 	private static WMManager wmManager;
 	
+	private static boolean register = false;
+	
 	public static void main(String[] args) 
 	{
 		Logger.LogForResult("Initializing TelegromBot");
@@ -185,13 +187,16 @@ public class Main
 	{
 		ApiContextInitializer.init();
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-        try {
-        	bot = new TelegramBot();
-            telegramBotsApi.registerBot(bot);
-            return true;
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+		bot = new TelegramBot();
+		if(register) {
+	        try {
+	        	
+	            telegramBotsApi.registerBot(bot);
+	            return true;
+	        } catch (TelegramApiException e) {
+	            e.printStackTrace();
+	        }
+		}
         return false;
 	}
 	
