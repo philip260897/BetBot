@@ -100,8 +100,8 @@ public class ScoreManager {
 							users.add(user);
 							
 							//TESTING PURPOSES
-							Random rand = new Random();
-							user.setScore(rand.nextInt(50));
+							//Random rand = new Random();
+							//user.setScore(rand.nextInt(50));
 							//----------------
 
 							ScoreLoader.saveUsers(users);
