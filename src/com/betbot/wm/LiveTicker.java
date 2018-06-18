@@ -34,7 +34,8 @@ public class LiveTicker
 			@Override
 			public void liveTickerGoal(Match match) {
 				if(!enabled) return;
-				Logger.Log("[LiveTicker] LiveTicker GOAAAAAAAAAL "+match.getTeamA() + " - " + match.getTeamB() + " "+match.getScoreA()+":"+match.getScoreB());
+				Logger.Log("[LiveTicker] GOAAAAAAAAAL "+match.getTeamA() + " - " + match.getTeamB() + " "+match.getScoreA()+":"+match.getScoreB());
+				Main.getTelegramBot().sendMessage("[LiveTicker] GOOOAAAAAAAL "+match.getTeamA()+" "+match.getScoreA()+":"+match.getScoreB()+" "+match.getTeamB());
 			}
 			
 		});

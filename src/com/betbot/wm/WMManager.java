@@ -340,7 +340,7 @@ public class WMManager
 				}else {Logger.Log("[Event] UpdateTimer failed! No next match!");}
 			}
 			
-		}, match[0].getTime(), 1000 * 3 * 60);
+		}, match[0].getTime(), 1000 * 1 * 60);
 	}
 
 	private boolean hasGoalsChanged(Match match1, Match match2) {
