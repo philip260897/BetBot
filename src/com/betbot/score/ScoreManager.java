@@ -5,6 +5,7 @@ package com.betbot.score;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -20,9 +21,12 @@ import com.betbot.wm.Match;
 import com.betbot.wm.MatchEvent;
 import com.betbot.wm.MatchStatus;
 
-public class ScoreManager {
-	static int i = 0;
-	static List<Users> users = new ArrayList<Users>();
+public class ScoreManager 
+{
+	private static int i = 0;
+	private static List<Users> users = new ArrayList<Users>();
+
+	
 	public static void init(){
 		users = ScoreLoader.loadUsers();
 		Logger.Log("Loaded "+users.size()+" users!");
@@ -55,22 +59,7 @@ public class ScoreManager {
 
 			@Override
 			public void MatchFinished(Match[] matchi) {
-				for(Users user : users) {
-					int score = 0;
-					
-					for(int i = 0; i < Main.getWMManager().getFinishedMatchCount(); i++) {
-						Match match = Main.getWMManager().getMatches()[i];
-						Tip tip = user.getTips()[i];
-						
-						if(tip.isValid()) {
-							int s =  Utils.calculateScore(match, user.getTips()[i]);
-							score+=s;
-						}
-					}
-					user.setScore(score);
-				}
-				ScoreLoader.saveUsers(users);
-				
+				updateScores();
 			}
 
 		});
@@ -112,16 +101,22 @@ public class ScoreManager {
 
 					}
 					if(cmd.equalsIgnoreCase("allscores")){
+						updateScores();
 						String message = sorting();
 						Main.getTelegramBot().sendMessage(message, chatId);
 					}
 					if(cmd.equalsIgnoreCase("getscore")){
-						
+						updateScores();
 						Users s = getUser(sender);
 						Main.getTelegramBot().sendMessage(""+s.getScore(), chatId);
 							
 						}
 
+					}
+					if(cmd.equalsIgnoreCase("history")) {
+						Users s = getUser(sender);
+						if(s != null)
+							Main.getTelegramBot().sendMessage(getHistory(s));
 					}
 					if(cmd.equalsIgnoreCase("bet")){
 						Match currentMatch[] = Main.getWMManager().getCurrentMatches();
@@ -135,10 +130,19 @@ public class ScoreManager {
 									&& StringUtils.isNumeric((args[0])) 
 									&& args[1].charAt(1) == ':'  
 									&& Character.isDigit((args[1].charAt(0))) 
-									&& Character.isDigit((args[1].charAt(2)))){
-								s.getTips()[Integer.parseInt(args[0])].setScoreA(Character.getNumericValue(args[1].charAt(0)));
-								s.getTips()[Integer.parseInt(args[0])].setScoreB(Character.getNumericValue(args[1].charAt(2)));
-								ScoreLoader.saveUsers(users);
+									&& Character.isDigit((args[1].charAt(2))))
+							{
+								Match matchTip = Main.getWMManager().getMatches()[Integer.parseInt(args[0])];
+								if(matchTip.getTime().after(new Date())) {
+								
+									s.getTips()[Integer.parseInt(args[0])].setScoreA(Character.getNumericValue(args[1].charAt(0)));
+									s.getTips()[Integer.parseInt(args[0])].setScoreB(Character.getNumericValue(args[1].charAt(2)));
+									s.getTips()[Integer.parseInt(args[0])].setValid(true);
+									ScoreLoader.saveUsers(users);
+								
+								} else {
+									Logger.Log("User "+sender+" hat versucht zu cheaten der "+Utils.insultGenerator());
+								}
 							}
 							else { 
 								Main.getTelegramBot().sendMessage("Falsche Eingabe du "+Utils.insultGenerator(),chatId);
@@ -189,7 +193,43 @@ public class ScoreManager {
 		return null;
 	}
 	
+	public static String getHistory(Users user) {
+		String history = "";
+		int total = 0;
+		for(int i = 0; i < Main.getWMManager().getFinishedMatchCount(); i++) {
+			Match match = Main.getWMManager().getMatches()[i];
+			Tip tip = user.getTips()[i];
+			int score = Utils.calculateScore(match, tip);
+			if(tip.isValid())
+				total += score;
+			history += i + " " + match.getTeamA()+"("+match.getScoreA()+") - "+match.getTeamB()+"("+match.getScoreB()+") "+tip.getScoreA()+":"+tip.getScoreB()+" score: "+ score+ " "+(!tip.isValid()?"INVALID":"")+"\n";
+		}
+		history += "Total score: "+total;
+		
+		return history;
+	}
+	
+	public static void updateScores() {
+		for(Users user : users) {
+			int score = 0;
+			
+			for(int i = 0; i < Main.getWMManager().getFinishedMatchCount(); i++) {
+				Match match = Main.getWMManager().getMatches()[i];
+				Tip tip = user.getTips()[i];
+				int s =  Utils.calculateScore(match, tip);
+							
+				if(tip.isValid()) {
+					score+=s;
+				}
+				
+			}
+			user.setScore(score);
+		}
+		ScoreLoader.saveUsers(users);
+	}
+	
 	public static String sorting(){
+		updateScores();
 		String message = "";
 		Collections.sort(users);
 		for(Users s : users){

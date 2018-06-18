@@ -22,7 +22,7 @@ public class Main
 	private static TelegramBot bot;
 	private static WMManager wmManager;
 	
-	private static boolean register = false;
+	private static boolean register = true;
 	
 	public static void main(String[] args) 
 	{
@@ -37,6 +37,8 @@ public class Main
 		
 		wmManager.init();
 		
+		//System.out.println(ScoreManager.sorting());
+		//System.out.println(ScoreManager.getHistory(ScoreManager.getUser("Fabian")));
 		//testUsers();
 		
 		//bot.sendMessage("Alles klar bei dir?");

@@ -89,7 +89,7 @@ public class WMManager
 	{
 		Logger.LogForResult("Trying to download Match info");
 		String json_raw = Utils.getText(MATCH_URL);
-		if(json_raw == null) {
+		if(json_raw == null || !json_raw.startsWith("{")) {
 			Logger.LogResult("FAILED");
 			Logger.LogForResult("Trying to load cached Matches");
 			json_raw = Utils.readFile("API_Cache.json");
@@ -109,37 +109,40 @@ public class WMManager
 		List<Match> matches = new ArrayList<Match>();
 		
 		Logger.LogForResult("Trying to parse JSON");
-		JSONObject obj = new JSONObject(json);
-		JSONArray fixtures = obj.getJSONArray("fixtures");
-		Date fix = new Date();
-		for(int i = 0; i < fixtures.length(); i++)
-		{
-			JSONObject matchObj = fixtures.getJSONObject(i);
-			String date = matchObj.getString("date").replaceAll("T", " ").replaceAll("Z", "");
-			MatchStatus status = null;
-			//if(i == 1)
-				//status = MatchStatus.IN_PLAY;
-			///else
-				status = MatchStatus.valueOf(matchObj.getString("status"));
-			String teamA = matchObj.getString("homeTeamName");
-			String teamB = matchObj.getString("awayTeamName");
-			
-			int scoreA = 0;
-			int scoreB = 0;
-			
-			try {
-			scoreA = matchObj.getJSONObject("result").getInt("goalsHomeTeam");
-			scoreB = matchObj.getJSONObject("result").getInt("goalsAwayTeam");
-			} catch(Exception ex) {}
-			
-			Date ddate = Utils.getDate(date, "yyyy-MM-dd HH:mm:ss");
-			ddate = Utils.subtractHour(ddate, -2);
-			
-			Match match = new Match(teamA, teamB, status, scoreA, scoreB, ddate, i);
-			matches.add(match);
-		}
-		Logger.LogResult("OK");
-		return matches.toArray(new Match[matches.size()]);
+		try {
+			JSONObject obj = new JSONObject(json);
+			JSONArray fixtures = obj.getJSONArray("fixtures");
+			Date fix = new Date();
+			for(int i = 0; i < fixtures.length(); i++)
+			{
+				JSONObject matchObj = fixtures.getJSONObject(i);
+				String date = matchObj.getString("date").replaceAll("T", " ").replaceAll("Z", "");
+				MatchStatus status = null;
+				//if(i == 1)
+					//status = MatchStatus.IN_PLAY;
+				///else
+					status = MatchStatus.valueOf(matchObj.getString("status"));
+				String teamA = matchObj.getString("homeTeamName");
+				String teamB = matchObj.getString("awayTeamName");
+				
+				int scoreA = 0;
+				int scoreB = 0;
+				
+				try {
+				scoreA = matchObj.getJSONObject("result").getInt("goalsHomeTeam");
+				scoreB = matchObj.getJSONObject("result").getInt("goalsAwayTeam");
+				} catch(Exception ex) {}
+				
+				Date ddate = Utils.getDate(date, "yyyy-MM-dd HH:mm:ss");
+				ddate = Utils.subtractHour(ddate, -2);
+				
+				Match match = new Match(teamA, teamB, status, scoreA, scoreB, ddate, i);
+				matches.add(match);
+			}
+			Logger.LogResult("OK");
+			return matches.toArray(new Match[matches.size()]);
+		}catch(Exception ex) {ex.printStackTrace();}
+		return null;
 	}
 	
 	private Match[] getMatchUpdates(Match[] matches) {
@@ -323,6 +326,8 @@ public class WMManager
 						}
 						
 						if(finished) {
+							Logger.Log("[Event] Triggering Match Finished! ("+match.length+")");
+							
 							eventMatchFinished(currentMatch);
 							currentMatch = null;
 							nextMatch = null;
