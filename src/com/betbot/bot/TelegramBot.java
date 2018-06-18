@@ -13,8 +13,8 @@ import com.betbot.main.Logger;
 public class TelegramBot extends TelegramLongPollingBot
 {
 	private List<TelegramBotEvent> telegramEvents = new ArrayList<TelegramBotEvent>();
-	//private long CHAT_ID = -241083590L;
-	private long CHAT_ID = 13451740L;
+	private long CHAT_ID = -241083590L; //R6Bot
+	//private long CHAT_ID = 13451740L;
 	private boolean first = false;
 	
 	public void addTelegramBotEvent(TelegramBotEvent event) {
@@ -66,13 +66,14 @@ public class TelegramBot extends TelegramLongPollingBot
 	
 	@Override
 	public String getBotUsername() {
-		return "BettingWCBot";
+		//return "BettingWCBot";
+		return "R6StatsTestBot";
 	}
 	
 	@Override
 	public String getBotToken() {
-		//return "515370867:AAEouxKQB49H9zxfP_L4xQnpJQgVmT7afOI";
-		return "619959278:AAEnChV3o2ji7-_Zxu8m-_YsQg48Gpea0JQ";
+		return "515370867:AAEouxKQB49H9zxfP_L4xQnpJQgVmT7afOI"; // R6
+		//return "619959278:AAEnChV3o2ji7-_Zxu8m-_YsQg48Gpea0JQ";
 	}
 	
 	private void eventMessageReceived(String message, String sender, long chatId)

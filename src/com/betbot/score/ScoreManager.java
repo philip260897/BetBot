@@ -33,18 +33,24 @@ public class ScoreManager {
 			@Override
 			public void PreMatch(Match[] match) {
 				// TODO Auto-generated method stub
-				Logger.LogResult("Registred Match Started");
+
 				int matchCount = match.length;
+				String message = "Spiel beginnt in einer Stunde! \nTipps abgeben!\n/bet ID SCORE:SCORE\n\n";
 				for(int i = 0; i<matchCount; i++){
-					Main.getTelegramBot().sendMessage("Spiel beginnt in einer Stunde! \nTipps abgeben!\n/bet ID SCORE:SCORE\nMATCH ID = "+match[i].getIndex()+"\n"+match[i].getTeamA()+"-"+ match[i].getTeamB());
+					message += "MATCH ID = "+match[i].getIndex()+"\n"+match[i].getTeamA()+"-"+ match[i].getTeamB()+"\n";
 				}
+				Main.getTelegramBot().sendMessage(message);
 			}
 
 			@Override
 			public void MatchStarted(Match[] match) {
-				Main.getTelegramBot().sendMessage("Spiel beginnt!\nNo more bets please\n"+match[i].getIndex()+"\n"+match[i].getTeamA()+"-"+ match[i].getTeamB());
+				int matchCount = match.length;
+				String message = "Spiel beginnt! \nKeine Tipps mehr!\n\n";
+				for(int i = 0; i<matchCount; i++){
+					message += match[i].getTeamA()+"-"+ match[i].getTeamB()+"\n";
+				}
+				Main.getTelegramBot().sendMessage(message);
 				
-
 			}
 
 			@Override
@@ -105,8 +111,12 @@ public class ScoreManager {
 
 
 					}
+					if(cmd.equalsIgnoreCase("allscores")){
+						String message = sorting();
+						Main.getTelegramBot().sendMessage(message, chatId);
+					}
 					if(cmd.equalsIgnoreCase("getscore")){
-						sorting();
+						
 						Users s = getUser(sender);
 						Main.getTelegramBot().sendMessage(""+s.getScore(), chatId);
 							
@@ -158,7 +168,7 @@ public class ScoreManager {
 							Users s = getUser(sender);
 							message += "\nID: "+ todayMatch[i].getIndex() + "\n"
 									+todayMatch[i].getTeamA()+
-									"-"+todayMatch[i].getTeamB()+" "+s.getTips()[todayMatch[i].getIndex()].getScoreA()+":"+s.getTips()[todayMatch[i].getIndex()].getScoreB()+"\n";
+									"-"+todayMatch[i].getTeamB()+" "+s.getTips()[todayMatch[i] .getIndex()].getScoreA()+":"+s.getTips()[todayMatch[i].getIndex()].getScoreB()+"\n";
 
 						}
 						Main.getTelegramBot().sendMessage(message,chatId);
@@ -183,7 +193,7 @@ public class ScoreManager {
 		String message = "";
 		Collections.sort(users);
 		for(Users s : users){
-			message += "USER: "+s.getUsername() + " SCORE: " + s.getScore() + "\n";
+			message += ""+s.getUsername() + " - Score: " + s.getScore() + "\n";
 		}
 		return message;
 		

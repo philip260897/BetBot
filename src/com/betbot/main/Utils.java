@@ -116,7 +116,7 @@ public class Utils
 	public static String insultGenerator(){
 
 		Random rand = new Random();
-		String insults[] = {"Spast", "ABS-Bremser","dumme Fickhure","Schwingtitte","Analbanane","Analdin", "Hodenknecht", "Wixgsicht", "Otto", "Gsicht", "Hurenknecht", "Wixkopf", "Hobelschlunze", "Schlingel", "Nichtsnutz"};
+		String insults[] = {"Schluckschlange","Schluckschlange","Rosettenpriester","Vorhautparasit","Strassenschlampe","Kotnascher","Fettgondel","Homo-Fürst","Sohn einer blutpissenden Hafenhure","Zuchtsau","Schlappschwanz","Sautrottel","Schandfleck","Sauschädel","Minusmensch","Kotzbrocken","Ganz-Körper-Frechheit","Fruchtzwerg", "Atomarer Unfall","Affenmensch","Spast", "ABS-Bremser","dumme Fickhure","Schwingtitte","Analbanane","Analdin", "Hodenknecht", "Wixgsicht", "Otto", "Gsicht", "Hurenknecht", "Wixkopf", "Hobelschlunze", "Schlingel", "Nichtsnutz"};
 		int  n = rand.nextInt(insults.length);
 		return insults[n];
 	}
