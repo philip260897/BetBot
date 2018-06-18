@@ -3,7 +3,10 @@ package com.betbot.score;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -85,6 +88,11 @@ public class ScoreManager {
 							Users user = new Users(sender);
 							Logger.Log("User: "+ sender +" Registered");
 							users.add(user);
+							
+							//TESTING PURPOSES
+							Random rand = new Random();
+							user.setScore(rand.nextInt(50));
+							//----------------
 
 							ScoreLoader.saveUsers(users);
 						}else{
@@ -94,6 +102,7 @@ public class ScoreManager {
 
 					}
 					if(cmd.equalsIgnoreCase("getscore")){
+						sorting();
 						Users s = getUser(sender);
 						Main.getTelegramBot().sendMessage(""+s.getScore(), chatId);
 							
@@ -101,13 +110,18 @@ public class ScoreManager {
 
 					}
 					if(cmd.equalsIgnoreCase("bet")){
+						Match currentMatch[] = Main.getWMManager().getCurrentMatches();
 						int checkInPlay = 0;
-						if(match[i].getStatus() == MatchStatus.IN_PLAY && checkInPlay == 0){
+						if(match[currentMatch.length].getStatus() == MatchStatus.IN_PLAY && checkInPlay == 0){
 							Main.getTelegramBot().sendMessage("Jetzt wird nicht gewettet du "+Utils.insultGenerator(),chatId);
 							checkInPlay = 1;
 						}else{
-							Users s = getUser(sender);
-							if(args[1].length() == 3 && StringUtils.isNumeric((args[0])) && args[1].charAt(1) == ':'  && Character.isDigit((args[1].charAt(0))) && Character.isDigit((args[1].charAt(2)))){
+							Users s = getUser(sender); 
+							if(args.length == 2 && args[1].length() == 3 
+									&& StringUtils.isNumeric((args[0])) 
+									&& args[1].charAt(1) == ':'  
+									&& Character.isDigit((args[1].charAt(0))) 
+									&& Character.isDigit((args[1].charAt(2)))){
 								s.getTips()[Integer.parseInt(args[0])].setScoreA(Character.getNumericValue(args[1].charAt(0)));
 								s.getTips()[Integer.parseInt(args[0])].setScoreB(Character.getNumericValue(args[1].charAt(2)));
 								ScoreLoader.saveUsers(users);
@@ -159,5 +173,15 @@ public class ScoreManager {
 			}
 		}
 		return null;
+	}
+	
+	public static String sorting(){
+		String message = "";
+		Collections.sort(users);
+		for(Users s : users){
+			message += "USER: "+s.getUsername() + " SCORE: " + s.getScore() + "\n";
+		}
+		return message;
+		
 	}
 }

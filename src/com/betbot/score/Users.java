@@ -1,6 +1,6 @@
 package com.betbot.score;
 
-public class Users {
+public class Users implements Comparable<Users> {
 	private String username;
 	private int score;
 	private Tip[] tips = new Tip[64];
@@ -38,4 +38,13 @@ public class Users {
 	public void setTips(Tip[] tips) {
 		this.tips = tips;
 	}
+	
+	public int compareTo(Users compare) {
+		// TODO Auto-generated method stub
+		int comparescore = ((Users) compare).getScore();
+		return comparescore-this.getScore();
+	}
+
+
+
 }
