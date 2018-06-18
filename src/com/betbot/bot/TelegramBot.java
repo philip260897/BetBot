@@ -67,7 +67,7 @@ public class TelegramBot extends TelegramLongPollingBot
 	@Override
 	public String getBotUsername() {
 		//return "BettingWCBot";
-		return "R6StatsTestBot";
+		return "R6StatTestBot";
 	}
 	
 	@Override
