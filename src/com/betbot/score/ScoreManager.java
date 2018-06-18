@@ -79,7 +79,7 @@ public class ScoreManager
 				if(args.length>2){
 					Main.getTelegramBot().sendMessage("Unterstütze nur ZWEI Argumente du "+Utils.insultGenerator(),chatId);
 				}else{
-					if(cmd.equalsIgnoreCase("register")){
+					if(cmd.equalsIgnoreCase("register") || cmd.equalsIgnoreCase("register@"+Main.getTelegramBot().getBotUsername())){
 						//Check if schon registriert
 						Users s = getUser(sender);
 
@@ -100,12 +100,13 @@ public class ScoreManager
 
 
 					}
-					if(cmd.equalsIgnoreCase("allscores")){
+					if(cmd.equalsIgnoreCase("allscores") || cmd.equalsIgnoreCase("allscores@"+Main.getTelegramBot().getBotUsername())){
 						updateScores();
+						//Logger.Log(Main.getTelegramBot().getBotUsername()+"  "+ cmd);
 						String message = sorting();
 						Main.getTelegramBot().sendMessage(message, chatId);
 					}
-					if(cmd.equalsIgnoreCase("getscore")){
+					if(cmd.equalsIgnoreCase("getscore") || cmd.equalsIgnoreCase("getscore@"+Main.getTelegramBot().getBotUsername())){
 						updateScores();
 						Users s = getUser(sender);
 						Main.getTelegramBot().sendMessage(""+s.getScore(), chatId);
@@ -113,12 +114,12 @@ public class ScoreManager
 						}
 
 					}
-					if(cmd.equalsIgnoreCase("history")) {
+					if(cmd.equalsIgnoreCase("history") || cmd.equalsIgnoreCase("history@"+Main.getTelegramBot().getBotUsername())) {
 						Users s = getUser(sender);
 						if(s != null)
 							Main.getTelegramBot().sendMessage(getHistory(s), chatId);
 					}
-					if(cmd.equalsIgnoreCase("bet")){
+					if(cmd.equalsIgnoreCase("bet") || cmd.equalsIgnoreCase("bet@"+Main.getTelegramBot().getBotUsername())){
 						Match currentMatch[] = Main.getWMManager().getCurrentMatches();
 						int checkInPlay = 0;
 						//if(match[currentMatch.length].getStatus() == MatchStatus.IN_PLAY && checkInPlay == 0){
@@ -166,7 +167,7 @@ public class ScoreManager
 
 					}
 
-					if(cmd.equalsIgnoreCase("matches")){
+					if(cmd.equalsIgnoreCase("matches") || cmd.equalsIgnoreCase("matches@"+Main.getTelegramBot().getBotUsername())){
 						Match todayMatch[] = Main.getWMManager().getTodaysMatches();
 						int matchCount = todayMatch.length;
 						String message = "Heutige Matches:\n/bet ID SCORE:SCORE\n";
@@ -175,7 +176,7 @@ public class ScoreManager
 						}
 						Main.getTelegramBot().sendMessage(message,chatId);
 					}
-					if(cmd.equalsIgnoreCase("tipstoday")){
+					if(cmd.equalsIgnoreCase("tipstoday") || cmd.equalsIgnoreCase("tipstoday@"+Main.getTelegramBot().getBotUsername())){
 						Match todayMatch[] = Main.getWMManager().getTodaysMatches();
 						int matchCount = todayMatch.length;
 						String message = "Deine Tipps du "+Utils.insultGenerator()+"\n";
