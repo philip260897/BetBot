@@ -35,7 +35,8 @@ public class ScoreLoader
 						Tip t = new Tip();
 						t.setScoreA(tip.getInt("scoreA"));
 						t.setScoreB(tip.getInt("scoreB"));
-						t.setValid(tip.getBoolean("valid"));
+						//System.out.println(i + " " + j);
+						t.setValid(tip.getBoolean("valild"));
 						ttips[j] = t;
 					}
 					

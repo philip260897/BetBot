@@ -21,8 +21,12 @@ public class ScoreManager {
 	static int i = 0;
 	static List<Users> users = new ArrayList<Users>();
 	public static void init(){
+		users = ScoreLoader.loadUsers();
+		Logger.Log("Loaded "+users.size()+" users!");
+		
 		Main.getWMManager().addMatchEvent(new MatchEvent(){
-
+			
+			
 			@Override
 			public void PreMatch(Match[] match) {
 				// TODO Auto-generated method stub
