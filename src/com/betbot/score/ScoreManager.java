@@ -152,8 +152,8 @@ public class ScoreManager
 										Main.getTelegramBot().sendMessage("Tipp ist leider zu spaet du "+Utils.insultGenerator(), chatId);
 										Logger.Log("Tipp ist leider zu spaet du "+Utils.insultGenerator());
 									} else {
-										//Main.getTelegramBot().sendMessage("Hör doch auf zu Hacken du "+Utils.insultGenerator(), chatId);
-										Logger.Log("Hör doch auf zu Hacken du "+Utils.insultGenerator());
+										Main.getTelegramBot().sendMessage("Hör doch auf zu Hacken du "+Utils.insultGenerator(), chatId);
+										//Logger.Log("Hör doch auf zu Hacken du "+Utils.insultGenerator());
 									}
 								}
 							}
