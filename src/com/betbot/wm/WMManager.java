@@ -333,8 +333,7 @@ public class WMManager
 							eventMatchFinished(currentMatch);
 							currentMatch = null;
 							nextMatch = null;
-							matches = downloadMatches();
-							update();
+							init();
 							timer.cancel();
 						}
 					} else {
