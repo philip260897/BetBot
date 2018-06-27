@@ -58,8 +58,13 @@ public class ScoreManager
 			}
 
 			@Override
-			public void MatchFinished(Match[] matchi) {
+			public void MatchFinished(Match[] match) {
 				updateScores();
+				String message = "Spiel(e) beendet:";
+				for(Match m : match) {
+					message += m.getTeamA()+"("+m.getScoreA()+") - ("+m.getScoreB()+")"+m.getTeamB()+"\n";
+				}
+				Main.getTelegramBot().sendMessage(message);
 			}
 
 		});
@@ -112,7 +117,20 @@ public class ScoreManager
 						Main.getTelegramBot().sendMessage(""+s.getScore(), chatId);
 							
 						}
-
+					}
+					if(cmd.equalsIgnoreCase("tipps") || cmd.equalsIgnoreCase("tipps@"+Main.getTelegramBot().getBotUsername())) {
+						if(args.length == 1 && StringUtils.isNumeric(args[0])) {					
+							int index = Integer.parseInt(args[0]);
+							Match m = Main.getWMManager().getMatches()[index];
+							String output = "Match-Tipps für "+m.getTeamA()+" - "+m.getTeamB()+"\n";
+							for(Users user : users) {
+								if(user.getTips()[index].isValid())
+									output += user.getUsername()+" - "+user.getTips()[index].getScoreA()+":"+user.getTips()[index].getScoreB()+"\n";
+							}
+							Main.getTelegramBot().sendMessage(output, chatId);
+						} else {
+							Main.getTelegramBot().sendMessage("Falsche Eingabe du "+Utils.insultGenerator(),chatId);
+						}
 					}
 					if(cmd.equalsIgnoreCase("history") || cmd.equalsIgnoreCase("history@"+Main.getTelegramBot().getBotUsername())) {
 						Users s = getUser(sender);
